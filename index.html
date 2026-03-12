@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mangú.ai</title>
+  <meta name="description" content="boiled. mashed. deployed.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@300;400;600&family=Cormorant:ital,wght@0,300;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body>
+
+  <header>
+    <span class="hdr-id">MANGÚ.AI</span>
+    <span class="hdr-status">
+      <span class="pulse"></span>
+      SEÑAL ACTIVA
+    </span>
+  </header>
+
+  <!-- ── Hero ──────────────────────────────────────────────────────── -->
+  <section class="hero" id="hero">
+
+    <!-- Three.js canvas injected here by waves.js -->
+
+    <!-- Tambora pulse rings (CSS animated) -->
+    <div class="tambora" aria-hidden="true">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+    </div>
+
+    <!-- Floating plátano leaves (GSAP animated) -->
+    <div class="leaves" aria-hidden="true">
+
+      <svg class="leaf leaf-1" viewBox="0 0 72 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M36 4C52 20 68 64 68 110C68 160 52 202 36 218C20 202 4 160 4 110C4 64 20 20 36 4Z" fill="#2b5918" opacity="0.26"/>
+        <path d="M36 4 L36 218" stroke="#1c3b0e" stroke-width="1.6" opacity="0.34"/>
+        <path d="M36 42L64 60M36 66L65 80M36 90L63 101M36 114L60 122M36 138L57 145M36 162L52 167" stroke="#1c3b0e" stroke-width="0.9" opacity="0.2" fill="none"/>
+        <path d="M36 42L8 60M36 66L7 80M36 90L9 101M36 114L12 122M36 138L15 145M36 162L20 167" stroke="#1c3b0e" stroke-width="0.9" opacity="0.2" fill="none"/>
+      </svg>
+
+      <svg class="leaf leaf-2" viewBox="0 0 72 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M36 4C52 20 68 64 68 110C68 160 52 202 36 218C20 202 4 160 4 110C4 64 20 20 36 4Z" fill="#2b5918" opacity="0.22"/>
+        <path d="M36 4 L36 218" stroke="#1c3b0e" stroke-width="1.6" opacity="0.28"/>
+        <path d="M36 44L63 62M36 72L64 84M36 100L62 110M36 128L58 136M36 156L54 162" stroke="#1c3b0e" stroke-width="0.9" opacity="0.17" fill="none"/>
+        <path d="M36 44L9 62M36 72L8 84M36 100L10 110M36 128L14 136M36 156L18 162" stroke="#1c3b0e" stroke-width="0.9" opacity="0.17" fill="none"/>
+      </svg>
+
+      <svg class="leaf leaf-3" viewBox="0 0 72 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M36 4C52 20 68 64 68 110C68 160 52 202 36 218C20 202 4 160 4 110C4 64 20 20 36 4Z" fill="#2b5918" opacity="0.18"/>
+        <path d="M36 4 L36 218" stroke="#1c3b0e" stroke-width="1.6" opacity="0.24"/>
+        <path d="M36 50L62 66M36 88L60 98M36 126L56 134" stroke="#1c3b0e" stroke-width="0.9" opacity="0.15" fill="none"/>
+        <path d="M36 50L10 66M36 88L12 98M36 126L16 134" stroke="#1c3b0e" stroke-width="0.9" opacity="0.15" fill="none"/>
+      </svg>
+
+      <svg class="leaf leaf-4" viewBox="0 0 72 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M36 4C52 20 68 64 68 110C68 160 52 202 36 218C20 202 4 160 4 110C4 64 20 20 36 4Z" fill="#2b5918" opacity="0.15"/>
+        <path d="M36 4 L36 218" stroke="#1c3b0e" stroke-width="1.6" opacity="0.2"/>
+      </svg>
+
+    </div>
+
+    <!-- Hero copy -->
+    <div class="hero-content">
+      <div class="sys-tag">
+        SYS_MSG — 19.4517°N — TRANSMISSION OPEN
+        <span class="cur"></span>
+      </div>
+      <h1>mangú</h1>
+      <p class="tagline">boiled. mashed. deployed.</p>
+      <p class="coords">19.4517° N &nbsp;·&nbsp; 70.6970° W</p>
+    </div>
+
+  </section>
+
+  <!-- ── Wave SVG break ────────────────────────────────────────────── -->
+  <div class="wave-break" aria-hidden="true">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,30 C240,58 480,4 720,30 C960,56 1200,6 1440,30 L1440,60 L0,60Z" fill="#0d6e60" opacity="0.13"/>
+      <path d="M0,38 C280,12 520,56 760,36 C980,18 1220,52 1440,36 L1440,60 L0,60Z" fill="#0d6e60" opacity="0.08"/>
+    </svg>
+  </div>
+
+  <!-- ── Marquee ────────────────────────────────────────────────────── -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="m-block">MANGÚ.AI <span class="m-sep">◆</span> SEÑAL ACTIVA <span class="m-sep">◆</span> WARM DATA <span class="m-sep">◆</span> CARIBBEAN INTELLIGENCE <span class="m-sep">◆</span> COORDINATES LOCKED <span class="m-sep">◆</span> TRANSMITIENDO <span class="m-sep">◆</span> DATOS CALIENTES <span class="m-sep">◆</span> INFERENCE EN PROGRESO <span class="m-sep">◆</span> VERDE Y VERDE <span class="m-sep">◆</span> THE FUTURE PERO SABROSO <span class="m-sep">◆</span></span>
+      <span class="m-block">MANGÚ.AI <span class="m-sep">◆</span> SEÑAL ACTIVA <span class="m-sep">◆</span> WARM DATA <span class="m-sep">◆</span> CARIBBEAN INTELLIGENCE <span class="m-sep">◆</span> COORDINATES LOCKED <span class="m-sep">◆</span> TRANSMITIENDO <span class="m-sep">◆</span> DATOS CALIENTES <span class="m-sep">◆</span> INFERENCE EN PROGRESO <span class="m-sep">◆</span> VERDE Y VERDE <span class="m-sep">◆</span> THE FUTURE PERO SABROSO <span class="m-sep">◆</span></span>
+    </div>
+  </div>
+
+  <!-- ── Recipe ─────────────────────────────────────────────────────── -->
+  <section class="recipe">
+    <p class="kicker">RECETA / INGREDIENTS</p>
+    <h2 class="rec-title">Mangú Clásico <em>×</em> Neural Configuration</h2>
+    <div class="rule"></div>
+    <ul class="ingredients">
+      <li class="ing">
+        <span class="qty">3 lbs</span>
+        <span class="name">green plantains, boiled until soft</span>
+      </li>
+      <li class="ing">
+        <span class="qty">∞</span>
+        <span class="name ai">training cycles, cleaned + tokenized</span>
+      </li>
+      <li class="ing">
+        <span class="qty">2</span>
+        <span class="name">garlic cloves, encrypted at rest</span>
+      </li>
+      <li class="ing">
+        <span class="qty">1 tbsp</span>
+        <span class="name">olive oil, cold-pressed, lossless</span>
+      </li>
+      <li class="ing">
+        <span class="qty">½ cup</span>
+        <span class="name ai">warm water (temperature: gradient)</span>
+      </li>
+      <li class="ing">
+        <span class="qty">—</span>
+        <span class="name">salt, to taste (tune hyperparameter)</span>
+      </li>
+    </ul>
+    <div class="rec-note">
+      YIELD: 1 serving &nbsp;/&nbsp; ∞ inference calls<br>
+      METHOD: boil. mash. season. deploy.<br>
+      NOTE: do not over-train. serve warm.
+    </div>
+  </section>
+
+  <!-- ── Contact ───────────────────────────────────────────────────── -->
+  <section class="contact">
+    <p class="contact-label">TRANSMIT TO</p>
+    <a href="mailto:hello@mangu.ai" class="contact-link">hello@mangu.ai</a>
+  </section>
+
+  <footer>
+    <span class="ft">© 2026 mangu.ai</span>
+    <span class="ft coords">19.4517° N, 70.6970° W</span>
+  </footer>
+
+</body>
+</html>
