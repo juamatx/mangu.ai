@@ -35,7 +35,7 @@ header {
   justify-content: space-between;
   align-items: center;
   z-index: 100;
-  background: rgba(245, 240, 230, 0.72);
+  background: rgba(245, 240, 230, 0.78);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(26, 18, 8, 0.07);
@@ -83,23 +83,53 @@ header {
   overflow: hidden;
 }
 
-/* Leaves layer */
-.leaves {
+/* ── Floaters ────────────────────────────────────────────────────── */
+/* Container */
+.floaters {
   position: absolute;
   inset: 0;
   z-index: 2;
   pointer-events: none;
 }
 
-.leaf           { position: absolute; opacity: 0; } /* GSAP animates in */
+/* All floaters start invisible — GSAP animates them in */
+.floater {
+  position: absolute;
+  opacity: 0;
+  /* Drop shadow shared by all illustrated elements */
+  filter: drop-shadow(0 8px 18px rgba(26,18,8,0.18));
+}
 
-.leaf-1 { top: 4%;    left:  -2%; width: 195px; }
-.leaf-2 { top: 24%;   right: -2%; width: 160px; transform: scaleX(-1) rotate(-10deg); }
-.leaf-3 { bottom: 6%; left:   5%; width: 125px; transform: rotate(18deg); }
-.leaf-4 { top: 52%;   right:  3%; width: 105px; transform: scaleX(-1) rotate(6deg); }
+/* Leaf positions */
+.leaf-1 {
+  top: 2%;
+  left: -2%;
+  width: clamp(140px, 17vw, 220px);
+}
 
-/* Tambora rings */
+.leaf-2 {
+  top: 16%;
+  right: -3%;
+  width: clamp(120px, 14vw, 185px);
+  transform: scaleX(-1) rotate(-14deg);
+}
+
+.leaf-3 {
+  bottom: 4%;
+  left: 2%;
+  width: clamp(100px, 12vw, 160px);
+  transform: rotate(20deg);
+}
+
+/* Tambora drum */
 .tambora {
+  bottom: 8%;
+  right: 4%;
+  width: clamp(100px, 13vw, 170px);
+}
+
+/* ── Rhythm rings (CSS animated, behind title) ───────────────────── */
+.rhythm-rings {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -58%);
@@ -112,19 +142,19 @@ header {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  border: 1.5px solid rgba(13, 110, 96, 0.28);
-  animation: ring-out 4.6s ease-out infinite;
+  border: 1.5px solid rgba(13, 110, 96, 0.25);
+  animation: ring-out 4.8s ease-out infinite;
 }
 
-.ring:nth-child(2) { animation-delay: 1.53s; }
-.ring:nth-child(3) { animation-delay: 3.07s; }
+.ring:nth-child(2) { animation-delay: 1.6s; }
+.ring:nth-child(3) { animation-delay: 3.2s; }
 
 @keyframes ring-out {
   0%   { transform: scale(0.3);  opacity: 0.8; }
-  100% { transform: scale(3.4);  opacity: 0;   }
+  100% { transform: scale(3.6);  opacity: 0;   }
 }
 
-/* Hero text */
+/* ── Hero text ───────────────────────────────────────────────────── */
 .hero-content { position: relative; z-index: 10; }
 
 .sys-tag {
@@ -160,8 +190,8 @@ h1 {
   line-height: 1;
   color: var(--ink);
   animation:
-    fade-up 1.5s 0.45s ease both,
-    glitch   16s  2.0s linear infinite;
+    fade-up  1.5s 0.45s ease both,
+    glitch  16.0s 2.0s  linear infinite;
 }
 
 @keyframes glitch {
@@ -203,7 +233,7 @@ h1 {
   to   { opacity: 1; transform: translateY(0);    }
 }
 
-/* ── Wave SVG break ──────────────────────────────────────────────── */
+/* ── Wave break ──────────────────────────────────────────────────── */
 .wave-break {
   display: block;
   width: 100%;
@@ -376,7 +406,7 @@ footer {
 /* ── Mobile ──────────────────────────────────────────────────────── */
 @media (max-width: 540px) {
   header { padding: 1.2rem 1.5rem; }
-  .leaf-2, .leaf-4 { display: none; }
+  .leaf-2 { display: none; }
   .ing { grid-template-columns: 2.8rem 1fr; gap: 0.9rem; }
   .ft.coords { display: none; }
   footer { padding: 1.25rem 1.5rem; }

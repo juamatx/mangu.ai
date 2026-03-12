@@ -6,7 +6,7 @@ const vert = /* glsl */`
   varying vec2 vUv;
   void main() {
     vUv = uv;
-    // Full-screen quad: position.xy is already in [-1,1] NDC
+    // Full-screen quad: bypass all projection — position.xy is already in [-1,1] NDC
     gl_Position = vec4(position.xy, 0.0, 1.0);
   }
 `;
@@ -25,20 +25,19 @@ const frag = /* glsl */`
   float vnoise(vec2 p) {
     vec2 i = floor(p);
     vec2 f = fract(p);
-    vec2 u = f * f * (3.0 - 2.0 * f); // smoothstep
+    vec2 u = f * f * (3.0 - 2.0 * f);
     return mix(
-      mix(hash(i),             hash(i + vec2(1.0, 0.0)), u.x),
+      mix(hash(i),                   hash(i + vec2(1.0, 0.0)), u.x),
       mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x),
       u.y
     );
   }
 
-  // ── Fractional Brownian Motion (5 octaves) ───────────────────────
-  // Classic rotation+scale matrix keeps octaves de-correlated
+  // ── FBM: 5 octaves with rotation to break up axis-alignment ─────
   float fbm(vec2 p) {
     float v = 0.0;
     float a = 0.5;
-    mat2 m = mat2(1.6, 1.2, -1.2, 1.6); // 36.87° rotation + 2× scale per octave
+    mat2 m = mat2(1.6, 1.2, -1.2, 1.6); // classic FBM rotation matrix
     for (int i = 0; i < 5; i++) {
       v += a * vnoise(p);
       p  = m * p;
@@ -49,45 +48,43 @@ const frag = /* glsl */`
 
   void main() {
     vec2 uv = vUv;
-    float t = uTime * 0.07; // slow, dreamy drift
+    float t = uTime * 0.07;
 
-    // Two FBM layers moving in subtly different directions —
-    // their interference creates organic, never-repeating patterns
+    // Two FBM layers in different directions — their interference
+    // creates organic patterns that never quite repeat
     float n1 = fbm(uv * 2.3 + vec2(t,        t * 0.55));
     float n2 = fbm(uv * 1.8 + vec2(t * 0.62, t * 1.05) + vec2(1.7, 2.9));
     float wave = mix(n1, n2, 0.42);
 
-    // ── Caribbean color palette ──────────────────────────────────
-    // Deep ocean teal → forest green → warm gold → coral
-    vec3 cTeal  = vec3(0.051, 0.431, 0.376); // #0d6e60
-    vec3 cGreen = vec3(0.169, 0.349, 0.094); // #2b5918
-    vec3 cGold  = vec3(0.690, 0.447, 0.035); // #b07209
-    vec3 cCoral = vec3(0.757, 0.290, 0.141); // #c14a24
+    // ── Caribbean color ramp ─────────────────────────────────────
+    vec3 cTeal  = vec3(0.051, 0.431, 0.376); // #0d6e60  deep ocean
+    vec3 cGreen = vec3(0.169, 0.349, 0.094); // #2b5918  forest
+    vec3 cGold  = vec3(0.690, 0.447, 0.035); // #b07209  warm gold
+    vec3 cCoral = vec3(0.757, 0.290, 0.141); // #c14a24  coral
 
     vec3 color;
-    float w = wave;
-    if (w < 0.33) {
-      color = mix(cTeal,  cGreen, smoothstep(0.0,  0.33, w));
-    } else if (w < 0.66) {
-      color = mix(cGreen, cGold,  smoothstep(0.33, 0.66, w));
+    if (wave < 0.33) {
+      color = mix(cTeal,  cGreen, smoothstep(0.0,  0.33, wave));
+    } else if (wave < 0.66) {
+      color = mix(cGreen, cGold,  smoothstep(0.33, 0.66, wave));
     } else {
-      color = mix(cGold,  cCoral, smoothstep(0.66, 1.0,  w));
+      color = mix(cGold,  cCoral, smoothstep(0.66, 1.0,  wave));
     }
 
-    // Alpha: semi-transparent — cream bg bleeds through
-    float alpha = 0.26 + wave * 0.16; // range ~0.26–0.42
+    // Slightly more opaque than before so the cartoon elements
+    // have a rich, colorful world to float in
+    float alpha = 0.32 + wave * 0.20; // range 0.32–0.52
 
-    // Soft edge fade so the canvas blends into the page seamlessly
-    vec2 edgeUv = uv;
+    // Soft edge vignette — canvas blends seamlessly into page bg
     float edge =
-      smoothstep(0.0, 0.08, edgeUv.x) * smoothstep(1.0, 0.92, edgeUv.x) *
-      smoothstep(0.0, 0.08, edgeUv.y) * smoothstep(1.0, 0.92, edgeUv.y);
+      smoothstep(0.0, 0.08, uv.x) * smoothstep(1.0, 0.92, uv.x) *
+      smoothstep(0.0, 0.08, uv.y) * smoothstep(1.0, 0.92, uv.y);
 
     gl_FragColor = vec4(color, alpha * edge);
   }
 `;
 
-// ── Setup ─────────────────────────────────────────────────────────────────────
+// ── Scene setup ───────────────────────────────────────────────────────────────
 
 export function initWaves(heroEl) {
   const canvas = document.createElement('canvas');
@@ -97,21 +94,18 @@ export function initWaves(heroEl) {
 
   const renderer = new THREE.WebGLRenderer({
     canvas,
-    alpha: true,       // transparent clear — CSS bg shows through
-    antialias: false,  // not needed for fragment shader
+    alpha: true,
+    antialias: false,
     powerPreference: 'low-power',
   });
-  // Cap pixel ratio to keep GPU load reasonable
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 
   const scene  = new THREE.Scene();
-  // Orthographic camera is unused (full-screen quad bypasses projection),
-  // but THREE.WebGLRenderer requires a camera for render().
   const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
   const uTime = { value: 0.0 };
 
-  const mesh = new THREE.Mesh(
+  scene.add(new THREE.Mesh(
     new THREE.PlaneGeometry(2, 2),
     new THREE.ShaderMaterial({
       uniforms:       { uTime },
@@ -120,8 +114,7 @@ export function initWaves(heroEl) {
       transparent:    true,
       depthWrite:     false,
     })
-  );
-  scene.add(mesh);
+  ));
 
   function resize() {
     renderer.setSize(heroEl.offsetWidth, heroEl.offsetHeight);
@@ -132,11 +125,9 @@ export function initWaves(heroEl) {
 
   const clock = new THREE.Clock();
 
-  function tick() {
+  (function tick() {
     uTime.value = clock.getElapsedTime();
     renderer.render(scene, camera);
     requestAnimationFrame(tick);
-  }
-
-  tick();
+  })();
 }
