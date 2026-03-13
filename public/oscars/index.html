@@ -1,522 +1,428 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Oscars 2026 · Josh vs Juan · mangu.ai</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oscar Ballot Showdown — Josh vs Juan vs Giuseppe</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Bebas+Neue&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --card-bg: #111111;
+    --card-hover: #181818;
+    --red: #e63946;
+    --gold: #d4a853;
+    --teal: #4ecdc4;
+    --white: #f0ece2;
+    --gray: #888;
+    --dim: #444;
+    --match-green: #2ecc71;
+  }
 
-    :root {
-      --bg:         #0e0e0f;
-      --surface:    #181819;
-      --surface-2:  #222224;
-      --border:     rgba(255,255,255,0.07);
-      --ink:        #f0ede8;
-      --ink-mid:    rgba(240,237,232,0.45);
-      --ink-faint:  rgba(240,237,232,0.10);
-      --teal:       #2dd4bf;
-      --teal-dim:   rgba(45,212,191,0.12);
-      --gold:       #f0b429;
-      --gold-dim:   rgba(240,180,41,0.12);
-      --agree:      rgba(45,212,191,0.08);
-      --agree-border: rgba(45,212,191,0.22);
-      --ff-serif: 'Fraunces', Georgia, serif;
-      --ff-mono:  'DM Mono', monospace;
-      --r: 10px;
-    }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Source Sans 3', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-    body {
-      background: var(--bg);
-      color: var(--ink);
-      font-family: var(--ff-serif);
-      -webkit-font-smoothing: antialiased;
-      min-height: 100vh;
-    }
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    padding: 60px 20px 20px;
+  }
+  .header::after {
+    content: '';
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    height: 2px;
+    background: var(--red);
+    margin: 30px auto 0;
+  }
+  .header-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 6px;
+    color: var(--red);
+    margin-bottom: 10px;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 900;
+    letter-spacing: -1px;
+    line-height: 1.15;
+    margin-bottom: 6px;
+  }
+  .header h1 .josh     { color: var(--red);  }
+  .header h1 .juan     { color: var(--gold); }
+  .header h1 .giuseppe { color: var(--teal); }
+  .header h1 .vs       { color: var(--dim); font-weight: 400; font-style: italic; font-size: 0.6em; }
+  .header .subtitle {
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--gray);
+    letter-spacing: 1px;
+  }
 
-    /* ── Header ─────────────────────────────────────── */
-    .site-header {
-      position: sticky; top: 0; z-index: 50;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0.9rem 1.25rem;
-      background: rgba(14,14,15,0.92);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-    }
+  /* ── COLUMN HEADERS ── */
+  .col-headers {
+    max-width: 960px;
+    margin: 40px auto 0;
+    padding: 0 20px 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  .col-header {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 4px;
+    text-align: center;
+  }
+  .col-header.josh-h     { color: var(--red);  text-align: left;  }
+  .col-header.juan-h     { color: var(--gold); }
+  .col-header.giuseppe-h { color: var(--teal); text-align: right; }
 
-    .site-header::after {
-      content: '';
-      position: absolute; bottom: -2px; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, var(--teal), var(--gold), transparent);
-      opacity: 0.6;
-    }
+  /* ── CARDS ── */
+  .categories {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
 
-    .header-back {
-      font-family: var(--ff-mono); font-size: 0.58rem;
-      letter-spacing: 0.14em; color: var(--ink-mid);
-      text-decoration: none; display: flex; align-items: center; gap: 0.4rem;
-      transition: color 0.2s;
-    }
-    .header-back::before { content: '←'; }
-    .header-back:hover { color: var(--teal); }
+  .category-card {
+    background: var(--card-bg);
+    border-left: 3px solid transparent;
+    margin-bottom: 2px;
+    padding: 20px 24px 18px;
+    transition: background 0.25s, border-left-color 0.25s;
+    opacity: 0;
+    animation: fadeUp 0.4s ease forwards;
+  }
+  .category-card:hover {
+    background: var(--card-hover);
+    border-left-color: var(--red);
+  }
 
-    .header-title {
-      font-family: var(--ff-mono); font-size: 0.60rem;
-      letter-spacing: 0.18em; color: var(--ink-mid); text-transform: uppercase;
-    }
+  /* ── CATEGORY LABEL ── */
+  .category-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 17px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--white);
+    opacity: 0.7;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #222;
+    margin-bottom: 16px;
+  }
 
-    /* ── Hero ───────────────────────────────────────── */
-    .page-hero {
-      padding: 3rem 1.25rem 2rem;
-      max-width: 640px; margin: 0 auto;
-    }
+  /* ── PICKS ROW ── */
+  .picks-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    align-items: start;
+  }
 
-    .page-eyebrow {
-      font-family: var(--ff-mono); font-size: 0.58rem;
-      letter-spacing: 0.22em; color: var(--ink-mid);
-      text-transform: uppercase; margin-bottom: 0.75rem;
-    }
+  .pick-cell { position: relative; }
+  .pick-cell.juan     { text-align: center; }
+  .pick-cell.giuseppe { text-align: right;  }
 
-    .page-title {
-      font-family: var(--ff-serif); font-weight: 300;
-      font-optical-sizing: auto; font-variation-settings: "opsz" 72;
-      font-size: clamp(3rem, 12vw, 5rem);
-      line-height: 0.95; color: var(--ink); margin-bottom: 2rem;
-    }
-    .page-title em { font-style: italic; color: var(--teal); }
+  /* ── POSTER ── */
+  .poster-wrap {
+    width: 100%;
+    aspect-ratio: 1/1;
+    max-height: 120px;
+    max-width: 120px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    overflow: hidden;
+    background: #1c1c1c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pick-cell.juan     .poster-wrap { margin-left: auto; margin-right: auto; }
+  .pick-cell.giuseppe .poster-wrap { margin-left: auto; }
 
-    /* Scoreboard */
-    .scoreboard {
-      display: flex; align-items: center; gap: 0;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r); margin-bottom: 0.75rem; overflow: hidden;
-    }
+  .poster-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .poster-wrap img.loaded { opacity: 1; }
 
-    .score-stat { text-align: center; flex: 1; padding: 1rem 0.5rem; }
+  .poster-fallback {
+    font-size: 28px;
+    color: var(--dim);
+  }
 
-    .score-number {
-      font-family: var(--ff-serif); font-weight: 300;
-      font-size: 2.2rem; line-height: 1; color: var(--ink);
-    }
+  /* green glow on matched poster */
+  .poster-wrap.matched-poster {
+    box-shadow: 0 0 0 2px var(--match-green);
+  }
 
-    .score-label {
-      font-family: var(--ff-mono); font-size: 0.50rem;
-      letter-spacing: 0.14em; color: var(--ink-mid);
-      text-transform: uppercase; margin-top: 0.25rem;
-    }
+  /* ── PICK TEXT ── */
+  .pick-owner {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .pick-cell.josh     .pick-owner { color: var(--red);  }
+  .pick-cell.juan     .pick-owner { color: var(--gold); }
+  .pick-cell.giuseppe .pick-owner { color: var(--teal); }
 
-    .score-divider { width: 1px; align-self: stretch; background: var(--border); }
+  .pick-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  .pick-name.matched {
+    text-decoration: underline;
+    text-decoration-color: var(--match-green);
+    text-underline-offset: 4px;
+    text-decoration-thickness: 2px;
+    color: var(--match-green);
+  }
 
-    /* Legend */
-    .legend {
-      display: flex; gap: 1.25rem;
-      padding: 0.5rem 0 1.5rem;
-    }
+  .vote-pct {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--dim);
+    margin-top: 3px;
+  }
+  .pick-name.matched + .vote-pct {
+    color: rgba(46, 204, 113, 0.5);
+  }
 
-    .legend-item {
-      display: flex; align-items: center; gap: 0.4rem;
-      font-family: var(--ff-mono); font-size: 0.56rem;
-      letter-spacing: 0.10em; color: var(--ink-mid);
-    }
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    padding: 40px 20px 60px;
+    font-size: 12px;
+    color: var(--dim);
+    letter-spacing: 2px;
+  }
 
-    .legend-dot { width: 7px; height: 7px; border-radius: 50%; }
-    .legend-dot.josh  { background: var(--teal); }
-    .legend-dot.juan  { background: var(--gold); }
-    .legend-dot.agree { background: transparent; border: 1px solid rgba(240,237,232,0.3); }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0);    }
+  }
 
-    /* ── Categories ─────────────────────────────────── */
-    .categories {
-      max-width: 640px; margin: 0 auto;
-      padding: 0 1.25rem 5rem;
-      display: flex; flex-direction: column; gap: 0.6rem;
-    }
-
-    .section-label {
-      font-family: var(--ff-mono); font-size: 0.52rem;
-      letter-spacing: 0.24em; color: var(--ink-mid);
-      text-transform: uppercase; padding: 1.25rem 0 0.25rem;
-      border-top: 1px solid var(--border); margin-top: 0.75rem;
-    }
-
-    .section-label:first-child { border-top: none; margin-top: 0; }
-
-    /* ── Card ───────────────────────────────────────── */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r); overflow: hidden;
-    }
-
-    .card.agree {
-      background: var(--agree);
-      border-color: var(--agree-border);
-    }
-
-    .card-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0.6rem 0.9rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .card-category {
-      font-family: var(--ff-mono); font-size: 0.54rem;
-      letter-spacing: 0.16em; color: var(--ink-mid); text-transform: uppercase;
-    }
-
-    .agree-badge {
-      font-family: var(--ff-mono); font-size: 0.50rem; letter-spacing: 0.08em;
-      color: var(--teal);
-      background: rgba(45,212,191,0.12);
-      padding: 2px 8px; border-radius: 20px;
-    }
-
-    /* ── Disagree: two columns ──────────────────────── */
-    .picks-grid { display: grid; grid-template-columns: 1fr 1fr; }
-
-    .pick { padding: 0.8rem; display: flex; flex-direction: column; gap: 0.55rem; position: relative; }
-    .pick.josh { border-right: 1px solid var(--border); }
-    .pick.josh::before {
-      content: ''; position: absolute; top: 0; left: 0;
-      width: 2px; height: 100%; background: var(--teal);
-    }
-    .pick.juan::before {
-      content: ''; position: absolute; top: 0; right: 0;
-      width: 2px; height: 100%; background: var(--gold);
-    }
-
-    /* ── Image container ────────────────────────────── */
-    .img-wrap {
-      position: relative; width: 100%; aspect-ratio: 2/3;
-      background: var(--surface-2); border-radius: 6px; overflow: hidden;
-    }
-
-    .img-wrap.person { aspect-ratio: 1/1; border-radius: 50%; width: 60px; align-self: center; }
-
-    .img-wrap img {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%; object-fit: cover;
-      opacity: 0; transition: opacity 0.5s ease;
-    }
-    .img-wrap img.loaded { opacity: 1; }
-
-    /* Shimmer */
-    .img-wrap::before {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%);
-      background-size: 200% 100%;
-      animation: shimmer 1.8s ease-in-out infinite;
-    }
-    .img-wrap.loaded-img::before { display: none; }
-
-    /* Fallback letter */
-    .img-wrap .fallback-letter {
-      position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--ff-serif); font-size: 1.6rem;
-      color: var(--ink-mid); opacity: 0.3;
-    }
-
-    @keyframes shimmer {
-      0%   { background-position: -200% 0; }
-      100% { background-position:  200% 0; }
-    }
-
-    .pick-name {
-      font-family: var(--ff-serif); font-weight: 300;
-      font-optical-sizing: auto; font-size: 0.85rem;
-      line-height: 1.25; color: var(--ink);
-    }
-
-    .pick-voter {
-      font-family: var(--ff-mono); font-size: 0.50rem;
-      letter-spacing: 0.12em; text-transform: uppercase;
-    }
-    .pick-voter.josh { color: var(--teal); }
-    .pick-voter.juan { color: var(--gold); }
-
-    /* ── Agree: horizontal row ──────────────────────── */
-    .agree-row { padding: 0.8rem 0.9rem; display: flex; align-items: center; gap: 0.9rem; }
-
-    .agree-row .img-wrap { flex-shrink: 0; width: 48px; }
-    .agree-row .img-wrap.person { width: 48px; height: 48px; }
-
-    .agree-info {}
-    .agree-info .pick-name { font-size: 0.90rem; margin-bottom: 0.3rem; }
-
-    .agree-voters {
-      font-family: var(--ff-mono); font-size: 0.50rem; letter-spacing: 0.10em;
-      display: flex; align-items: center; gap: 0.35rem;
-    }
-    .agree-voters .sep { color: var(--ink-faint); }
-
-    /* ── Footer ─────────────────────────────────────── */
-    .site-footer {
-      text-align: center; padding: 2rem 1.25rem;
-      border-top: 1px solid var(--border);
-      font-family: var(--ff-mono); font-size: 0.56rem;
-      letter-spacing: 0.14em; color: var(--ink-mid);
-    }
-    .site-footer a { color: var(--ink-mid); text-decoration: none; }
-    .site-footer a:hover { color: var(--teal); }
-  </style>
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    .picks-row { grid-template-columns: 1fr; gap: 14px; }
+    .pick-cell, .pick-cell.juan, .pick-cell.giuseppe { text-align: left; }
+    .pick-cell { padding-left: 14px; border-left: 2px solid transparent; }
+    .pick-cell.josh     { border-left-color: var(--red);  }
+    .pick-cell.juan     { border-left-color: var(--gold); }
+    .pick-cell.giuseppe { border-left-color: var(--teal); }
+    .pick-cell.juan .poster-wrap,
+    .pick-cell.giuseppe .poster-wrap { margin-left: 0; margin-right: auto; }
+    .col-headers { display: none; }
+    .poster-wrap { max-height: 90px; max-width: 90px; }
+  }
+</style>
 </head>
 <body>
 
-  <header class="site-header">
-    <a href="/" class="header-back">mangu.ai</a>
-    <span class="header-title">Oscars 2026</span>
-    <span style="width:56px"></span>
-  </header>
+<div class="header">
+  <div class="header-label">98th Academy Awards Ballot</div>
+  <h1>
+    <span class="josh">Josh</span> <span class="vs">vs</span>
+    <span class="juan">Juan</span> <span class="vs">vs</span>
+    <span class="giuseppe">Giuseppe</span>
+  </h1>
+  <div class="subtitle">Every pick. Every category. Who called it?</div>
+</div>
 
-  <div class="page-hero">
-    <p class="page-eyebrow">Academy Awards · 2026</p>
-    <h1 class="page-title">Josh<br>vs <em>Juan</em></h1>
+<div class="col-headers">
+  <div class="col-header josh-h">Josh</div>
+  <div class="col-header juan-h">Juan</div>
+  <div class="col-header giuseppe-h">Giuseppe</div>
+</div>
 
-    <div class="scoreboard">
-      <div class="score-stat">
-        <div class="score-number" id="agree-count">13</div>
-        <div class="score-label">Agree</div>
-      </div>
-      <div class="score-divider"></div>
-      <div class="score-stat">
-        <div class="score-number" id="differ-count">11</div>
-        <div class="score-label">Differ</div>
-      </div>
-      <div class="score-divider"></div>
-      <div class="score-stat">
-        <div class="score-number">24</div>
-        <div class="score-label">Categories</div>
-      </div>
-    </div>
+<div class="categories" id="categories"></div>
 
-    <div class="legend">
-      <div class="legend-item"><div class="legend-dot josh"></div>Josh</div>
-      <div class="legend-item"><div class="legend-dot juan"></div>Juan</div>
-      <div class="legend-item"><div class="legend-dot agree"></div>Both agree</div>
-    </div>
-  </div>
-
-  <main class="categories" id="categories"></main>
-
-  <footer class="site-footer">
-    <a href="/">mangú.ai</a> &nbsp;·&nbsp; 19.4517° N, 70.6970° W
-  </footer>
+<div class="footer">VANITY FAIR OSCAR BALLOT COMPARISON · 2026</div>
 
 <script>
-// ── Picks data ──────────────────────────────────────────────────────────
-const PICKS = [
-  { group: 'Performance',
-    cat: 'Best Picture',              type: 'film',   josh: 'Hamnet',                               juan: 'One Battle After Another' },
-  { cat: 'Best Director',             type: 'person', josh: 'Ryan Coogler',                         juan: 'Paul Thomas Anderson' },
-  { cat: 'Best Actress',              type: 'person', josh: 'Jessie Buckley',                       juan: 'Jessie Buckley' },
-  { cat: 'Best Actor',                type: 'person', josh: 'Michael B. Jordan',                    juan: 'Michael B. Jordan' },
-  { cat: 'Best Supporting Actress',   type: 'person', josh: 'Teyana Taylor',                        juan: 'Teyana Taylor' },
-  { cat: 'Best Supporting Actor',     type: 'person', josh: 'Stellan Skarsgård',                    juan: 'Delroy Lindo' },
+const picks = [
+  { category: "Best Picture",
+    josh:      { pick: "Hamnet",                 image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "5%" },
+    juan:      { pick: "One Battle After Another",image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "41%" },
+    giuseppe:  { pick: "Frankenstein",            image: "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300", vote: "3%" } },
 
-  { group: 'Screenplay',
-    cat: 'Best Original Screenplay',  type: 'film',   josh: 'Sinners',                              juan: 'Sinners' },
-  { cat: 'Best Adapted Screenplay',   type: 'film',   josh: 'Hamnet',                               juan: 'Hamnet' },
+  { category: "Best Director",
+    josh:      { pick: "Ryan Coogler",            image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "32%" },
+    juan:      { pick: "Paul Thomas Anderson",    image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "55%" },
+    giuseppe:  { pick: "Paul Thomas Anderson",    image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "55%" } },
 
-  { group: 'Specialty',
-    cat: 'Best International Feature',type: 'film',   josh: 'The Voice of Hind Rajab',              juan: 'The Secret Agent' },
-  { cat: 'Best Animated Feature',     type: 'film',   josh: 'KPop Demon Hunters',                   juan: 'Little Amélie or the Character of Rain' },
-  { cat: 'Best Documentary Feature',  type: 'film',   josh: 'The Perfect Neighbor',                 juan: 'Come See Me in the Good Light' },
+  { category: "Best Actress",
+    josh:      { pick: "Jessie Buckley",          image: "https://media.vanityfair.com/photos/68a621e9fd15f61246dbb26d/1:1/w_300", vote: "73%" },
+    juan:      { pick: "Jessie Buckley",          image: "https://media.vanityfair.com/photos/68a621e9fd15f61246dbb26d/1:1/w_300", vote: "73%" },
+    giuseppe:  { pick: "Jessie Buckley",          image: "https://media.vanityfair.com/photos/68a621e9fd15f61246dbb26d/1:1/w_300", vote: "73%" } },
 
-  { group: 'Craft',
-    cat: 'Best Original Score',       type: 'film',   josh: 'Frankenstein',                         juan: 'Sinners' },
-  { cat: 'Best Original Song',        type: 'film',   josh: 'Golden',                               juan: 'Golden' },
-  { cat: 'Best Cinematography',       type: 'film',   josh: 'Train Dreams',                         juan: 'Train Dreams' },
-  { cat: 'Best Costume Design',       type: 'film',   josh: 'Frankenstein',                         juan: 'Frankenstein' },
-  { cat: 'Best Film Editing',         type: 'film',   josh: 'F1',                                   juan: 'F1' },
-  { cat: 'Best Casting',              type: 'film',   josh: 'One Battle After Another',             juan: 'One Battle After Another' },
-  { cat: 'Best Makeup and Hairstyling',type:'film',   josh: 'Frankenstein',                         juan: 'Frankenstein' },
-  { cat: 'Best Production Design',    type: 'film',   josh: 'Sinners',                              juan: 'One Battle After Another' },
-  { cat: 'Best Sound',                type: 'film',   josh: 'F1',                                   juan: 'F1' },
-  { cat: 'Best Visual Effects',       type: 'film',   josh: 'Avatar: Fire and Ash',                 juan: 'Avatar: Fire and Ash' },
+  { category: "Best Actor",
+    josh:      { pick: "Michael B. Jordan",       image: "https://media.vanityfair.com/photos/6980e128825f8d54ff81329b/1:1/w_300", vote: "56%" },
+    juan:      { pick: "Michael B. Jordan",       image: "https://media.vanityfair.com/photos/6980e128825f8d54ff81329b/1:1/w_300", vote: "56%" },
+    giuseppe:  { pick: "Timothée Chalamet",       image: "https://media.vanityfair.com/photos/69694039fea64349533e2a0d/1:1/w_300", vote: "26%" } },
 
-  { group: 'Shorts',
-    cat: 'Best Animated Short',       type: 'film',   josh: 'Retirement Plan',                      juan: 'Butterfly' },
-  { cat: 'Best Live-Action Short',    type: 'film',   josh: 'A Friend of Dorothy',                  juan: 'The Singers' },
-  { cat: 'Best Documentary Short',    type: 'film',   josh: 'Children No More: Were and Are Gone',  juan: 'The Devil Is Busy' },
+  { category: "Best Supporting Actress",
+    josh:      { pick: "Teyana Taylor",           image: "https://media.vanityfair.com/photos/69459ca03540978087923900/1:1/w_300", vote: "23%" },
+    juan:      { pick: "Teyana Taylor",           image: "https://media.vanityfair.com/photos/69459ca03540978087923900/1:1/w_300", vote: "23%" },
+    giuseppe:  { pick: "Teyana Taylor",           image: "https://media.vanityfair.com/photos/69459ca03540978087923900/1:1/w_300", vote: "23%" } },
+
+  { category: "Best Supporting Actor",
+    josh:      { pick: "Stellan Skarsgård",       image: "https://media.vanityfair.com/photos/6980e826c319510dba722560/1:1/w_300", vote: "16%" },
+    juan:      { pick: "Delroy Lindo",            image: "https://media.vanityfair.com/photos/6980e7b646b86b2fb3c36e56/1:1/w_300", vote: "17%" },
+    giuseppe:  { pick: "Jacob Elordi",            image: "https://media.vanityfair.com/photos/6980f246a9f54c8d7bb1079a/1:1/w_300", vote: "12%" } },
+
+  { category: "Best Original Screenplay",
+    josh:      { pick: "Sinners",                 image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "76%" },
+    juan:      { pick: "Sinners",                 image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "76%" },
+    giuseppe:  { pick: "Sinners",                 image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "76%" } },
+
+  { category: "Best Adapted Screenplay",
+    josh:      { pick: "Hamnet",                  image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "19%" },
+    juan:      { pick: "Hamnet",                  image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "19%" },
+    giuseppe:  { pick: "Hamnet",                  image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "19%" } },
+
+  { category: "Best International Feature",
+    josh:      { pick: "The Voice of Hind Rajab", image: "https://media.vanityfair.com/photos/698383378d2faca3ac9c2c8e/1:1/w_300", vote: "4%" },
+    juan:      { pick: "The Secret Agent",        image: "https://media.vanityfair.com/photos/682107888fbed777b44552af/1:1/w_300", vote: "27%" },
+    giuseppe:  { pick: "It Was Just an Accident", image: "https://media.vanityfair.com/photos/6984b89f90beed24b7dab9f9/1:1/w_300", vote: "8%" } },
+
+  { category: "Best Animated Feature",
+    josh:      { pick: "KPop Demon Hunters",                        image: "https://media.vanityfair.com/photos/68d3f4dd47f4cdba33dfbccf/1:1/w_300", vote: "76%" },
+    juan:      { pick: "Little Amélie or the Character of Rain",    image: "https://media.vanityfair.com/photos/6984cc7c90beed24b7dabbef/1:1/w_300", vote: "4%" },
+    giuseppe:  { pick: "KPop Demon Hunters",                        image: "https://media.vanityfair.com/photos/68d3f4dd47f4cdba33dfbccf/1:1/w_300", vote: "76%" } },
+
+  { category: "Best Documentary Feature",
+    josh:      { pick: "The Perfect Neighbor",            image: "https://media.vanityfair.com/photos/6984cc7cfeed93e5e4f1fc8f/1:1/w_300", vote: "56%" },
+    juan:      { pick: "Come See Me in the Good Light",   image: "https://media.vanityfair.com/photos/6984cc7e282cb3b32361892c/1:1/w_300", vote: "10%" },
+    giuseppe:  { pick: "Come See Me in the Good Light",   image: "https://media.vanityfair.com/photos/6984cc7e282cb3b32361892c/1:1/w_300", vote: "10%" } },
+
+  { category: "Best Original Score",
+    josh:      { pick: "Frankenstein",            image: "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300", vote: "4%" },
+    juan:      { pick: "Sinners",                 image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "79%" },
+    giuseppe:  { pick: "Hamnet",                  image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "5%" } },
+
+  { category: "Best Original Song",
+    josh:      { pick: "Golden",                  image: "https://media.vanityfair.com/photos/68d3f4dd47f4cdba33dfbccf/1:1/w_300", vote: "62%" },
+    juan:      { pick: "Golden",                  image: "https://media.vanityfair.com/photos/68d3f4dd47f4cdba33dfbccf/1:1/w_300", vote: "62%" },
+    giuseppe:  { pick: "Dear Me",                 image: "https://media.vanityfair.com/photos/6984cc7b282cb3b32361891f/1:1/w_300", vote: "1%" } },
+
+  { category: "Best Cinematography",
+    josh:      { pick: "Train Dreams",            image: "https://media.vanityfair.com/photos/695c14784d16d8b8bf106334/1:1/w_300", vote: "17%" },
+    juan:      { pick: "Train Dreams",            image: "https://media.vanityfair.com/photos/695c14784d16d8b8bf106334/1:1/w_300", vote: "17%" },
+    giuseppe:  { pick: "One Battle After Another",image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "26%" } },
+
+  { category: "Best Costume Design",
+    josh:      { pick: "Frankenstein",            image: "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300", vote: "65%" },
+    juan:      { pick: "Frankenstein",            image: "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300", vote: "65%" },
+    giuseppe:  { pick: "Frankenstein",            image: "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300", vote: "65%" } },
+
+  { category: "Best Film Editing",
+    josh:      { pick: "F1",                      image: "https://media.vanityfair.com/photos/6980f109656834c976707272/1:1/w_300", vote: "15%" },
+    juan:      { pick: "F1",                      image: "https://media.vanityfair.com/photos/6980f109656834c976707272/1:1/w_300", vote: "15%" },
+    giuseppe:  { pick: "Marty Supreme",           image: "https://media.vanityfair.com/photos/6924c994ed07f0d4cdeccc85/1:1/w_300", vote: "10%" } },
+
+  { category: "Best Casting",
+    josh:      { pick: "One Battle After Another",image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "14%" },
+    juan:      { pick: "One Battle After Another",image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "14%" },
+    giuseppe:  { pick: "Hamnet",                  image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "5%" } },
+
+  { category: "Best Makeup and Hairstyling",
+    josh:      { pick: "Frankenstein",            image: "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300", vote: "81%" },
+    juan:      { pick: "Frankenstein",            image: "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300", vote: "81%" },
+    giuseppe:  { pick: "Frankenstein",            image: "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300", vote: "81%" } },
+
+  { category: "Best Production Design",
+    josh:      { pick: "Sinners",                 image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "27%" },
+    juan:      { pick: "One Battle After Another",image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "4%" },
+    giuseppe:  { pick: "Marty Supreme",           image: "https://media.vanityfair.com/photos/6924c994ed07f0d4cdeccc85/1:1/w_300", vote: "8%" } },
+
+  { category: "Best Sound",
+    josh:      { pick: "F1",                      image: "https://media.vanityfair.com/photos/6980f109656834c976707272/1:1/w_300", vote: "54%" },
+    juan:      { pick: "F1",                      image: "https://media.vanityfair.com/photos/6980f109656834c976707272/1:1/w_300", vote: "54%" },
+    giuseppe:  { pick: "F1",                      image: "https://media.vanityfair.com/photos/6980f109656834c976707272/1:1/w_300", vote: "54%" } },
+
+  { category: "Best Visual Effects",
+    josh:      { pick: "Avatar: Fire and Ash",    image: "https://media.vanityfair.com/photos/6984cc7e530004d8e8c621c0/1:1/w_300", vote: "70%" },
+    juan:      { pick: "Avatar: Fire and Ash",    image: "https://media.vanityfair.com/photos/6984cc7e530004d8e8c621c0/1:1/w_300", vote: "70%" },
+    giuseppe:  { pick: "Avatar: Fire and Ash",    image: "https://media.vanityfair.com/photos/6984cc7e530004d8e8c621c0/1:1/w_300", vote: "70%" } },
+
+  { category: "Best Animated Short",
+    josh:      { pick: "Retirement Plan",         image: "https://media.vanityfair.com/photos/6980eafa86ee5cbe43a66203/1:1/w_300", vote: "11%" },
+    juan:      { pick: "Butterfly",               image: "https://media.vanityfair.com/photos/6980de19fbf90a75f410420e/1:1/w_300", vote: "21%" },
+    giuseppe:  { pick: "The Girl Who Cried Pearls",image:"https://media.vanityfair.com/photos/6980ea9fa9f54c8d7bb10792/1:1/w_300", vote: "44%" } },
+
+  { category: "Best Live-Action Short",
+    josh:      { pick: "A Friend of Dorothy",     image: "https://media.vanityfair.com/photos/6984d426282cb3b3236189f1/1:1/w_300", vote: "51%" },
+    juan:      { pick: "The Singers",             image: "https://media.vanityfair.com/photos/6984d5db05a9a1ff7ceb676a/1:1/w_300", vote: "12%" },
+    giuseppe:  { pick: "Butcher's Stain",         image: "https://media.vanityfair.com/photos/6984d30f8ef616bb843a827d/1:1/w_300", vote: "7%" } },
+
+  { category: "Best Documentary Short",
+    josh:      { pick: 'Children No More: "Were and Are Gone"', image: "https://media.vanityfair.com/photos/6980f2c7644e18dcf873de3d/1:1/w_300", vote: "17%" },
+    juan:      { pick: "The Devil Is Busy",       image: "https://media.vanityfair.com/photos/6980f31ad5b24277eb8f17e5/1:1/w_300", vote: "32%" },
+    giuseppe:  { pick: "The Devil Is Busy",       image: "https://media.vanityfair.com/photos/6980f31ad5b24277eb8f17e5/1:1/w_300", vote: "32%" } },
 ];
 
-// ── Image sources ───────────────────────────────────────────────────────
-// Try multiple sources in order. First that resolves wins.
-const SOURCES = {
-  // Actors / Directors — Wikipedia article title
-  'Ryan Coogler':        { wiki: 'Ryan Coogler' },
-  'Paul Thomas Anderson':{ wiki: 'Paul Thomas Anderson' },
-  'Jessie Buckley':      { wiki: 'Jessie Buckley' },
-  'Michael B. Jordan':   { wiki: 'Michael B. Jordan' },
-  'Teyana Taylor':       { wiki: 'Teyana Taylor' },
-  'Stellan Skarsgård':   { wiki: 'Stellan Skarsg%C3%A5rd' },
-  'Delroy Lindo':        { wiki: 'Delroy Lindo' },
-
-  // Films — Wikipedia article title
-  'Sinners':             { wiki: 'Sinners_(2025_film)' },
-  'Hamnet':              { wiki: 'Hamnet_(film)' },
-  'One Battle After Another': { wiki: 'One_Battle_After_Another' },
-  'F1':                  { wiki: 'F1_(film)' },
-  'Frankenstein':        { wiki: 'Frankenstein_(2025_film)' },
-  'Train Dreams':        { wiki: 'Train_Dreams_(film)' },
-  'Avatar: Fire and Ash':{ wiki: 'Avatar:_Fire_and_Ash' },
-  'The Voice of Hind Rajab': { wiki: 'The_Voice_of_Hind_Rajab' },
-  'The Secret Agent':    { wiki: 'The_Secret_Agent_(2025_film)' },
-  'KPop Demon Hunters':  { wiki: 'K-Pop_Demon_Hunters' },
-  'Golden':              { wiki: 'Sinners_(2025_film)' },
-};
-
-// ── Image cache ─────────────────────────────────────────────────────────
-const cache = {};
-
-async function fetchWikiThumb(wikiTitle) {
-  try {
-    const r = await fetch(
-      'https://en.wikipedia.org/api/rest_v1/page/summary/' + wikiTitle,
-      { headers: { Accept: 'application/json' } }
-    );
-    if (!r.ok) return null;
-    const d = await r.json();
-    return d.thumbnail?.source ?? null;
-  } catch { return null; }
-}
-
-async function getImageSrc(name) {
-  if (cache[name] !== undefined) return cache[name];
-  cache[name] = null; // prevent double-fetching
-
-  const src = SOURCES[name];
-  if (src?.wiki) {
-    const url = await fetchWikiThumb(src.wiki);
-    if (url) { cache[name] = url; return url; }
-  }
-  return null;
-}
-
-// ── DOM builder helpers ─────────────────────────────────────────────────
-function el(tag, cls) {
-  const e = document.createElement(tag);
-  if (cls) e.className = cls;
-  return e;
-}
-
-function makeImgWrap(name, type) {
-  const wrap = el('div', 'img-wrap' + (type === 'person' ? ' person' : ''));
-
-  const fb = el('div', 'fallback-letter');
-  fb.textContent = name.charAt(0);
-  wrap.appendChild(fb);
-
-  getImageSrc(name).then(src => {
-    wrap.classList.add('loaded-img'); // kill shimmer
-    if (!src) return;
-    const img = document.createElement('img');
-    img.alt = name;
-    img.loading = 'lazy';
-    img.onload = () => img.classList.add('loaded');
-    img.src = src;
-    fb.style.display = 'none';
-    wrap.appendChild(img);
-  });
-
-  return wrap;
-}
-
-// ── Card builders ───────────────────────────────────────────────────────
-function buildDisagreeCard(item) {
-  const card = el('div', 'card');
-
-  const hdr = el('div', 'card-header');
-  const cat = el('span', 'card-category');
-  cat.textContent = item.cat;
-  hdr.appendChild(cat);
-  card.appendChild(hdr);
-
-  const grid = el('div', 'picks-grid');
-
-  ['josh', 'juan'].forEach(voter => {
-    const name = item[voter];
-    const pick = el('div', 'pick ' + voter);
-
-    pick.appendChild(makeImgWrap(name, item.type));
-
-    const nm = el('div', 'pick-name');
-    nm.textContent = name;
-    pick.appendChild(nm);
-
-    const vt = el('div', 'pick-voter ' + voter);
-    vt.textContent = voter.charAt(0).toUpperCase() + voter.slice(1);
-    pick.appendChild(vt);
-
-    grid.appendChild(pick);
-  });
-
-  card.appendChild(grid);
-  return card;
-}
-
-function buildAgreeCard(item) {
-  const card = el('div', 'card agree');
-
-  const hdr = el('div', 'card-header');
-  const cat = el('span', 'card-category');
-  cat.textContent = item.cat;
-  const badge = el('span', 'agree-badge');
-  badge.textContent = '✓ agree';
-  hdr.appendChild(cat);
-  hdr.appendChild(badge);
-  card.appendChild(hdr);
-
-  const row = el('div', 'agree-row');
-  row.appendChild(makeImgWrap(item.josh, item.type));
-
-  const info = el('div', 'agree-info');
-  const nm = el('div', 'pick-name');
-  nm.textContent = item.josh;
-  info.appendChild(nm);
-
-  const voters = el('div', 'agree-voters');
-  const j = el('span', 'pick-voter josh');
-  j.textContent = 'Josh';
-  const sep = el('span', 'sep');
-  sep.textContent = '·';
-  const n = el('span', 'pick-voter juan');
-  n.textContent = 'Juan';
-  voters.appendChild(j);
-  voters.appendChild(sep);
-  voters.appendChild(n);
-  info.appendChild(voters);
-  row.appendChild(info);
-  card.appendChild(row);
-  return card;
-}
-
-// ── Render ──────────────────────────────────────────────────────────────
 const container = document.getElementById('categories');
-let agrees = 0, differs = 0;
 
-PICKS.forEach(item => {
-  if (item.group) {
-    const lbl = el('div', 'section-label');
-    lbl.textContent = item.group;
-    container.appendChild(lbl);
-  }
+picks.forEach((p, i) => {
+  const jj = p.josh.pick && p.juan.pick     && p.josh.pick === p.juan.pick;
+  const jg = p.josh.pick && p.giuseppe.pick && p.josh.pick === p.giuseppe.pick;
+  const ug = p.juan.pick && p.giuseppe.pick && p.juan.pick === p.giuseppe.pick;
 
-  const isAgree = item.josh === item.juan;
-  isAgree ? agrees++ : differs++;
-  container.appendChild(isAgree ? buildAgreeCard(item) : buildDisagreeCard(item));
+  const joshMatch     = jj || jg;
+  const juanMatch     = jj || ug;
+  const giuseppeMatch = jg || ug;
+
+  const cell = (person, data, isMatch) => {
+    const pc = isMatch ? ' matched-poster' : '';
+    const nc = isMatch ? ' matched' : '';
+    const src = data.image ? data.image.replace('/w_300', '/w_500') : '';
+    const img = src
+      ? `<img src="${src}" alt="${data.pick}" onload="this.classList.add('loaded')">`
+      : `<span class="poster-fallback">🎬</span>`;
+
+    return `<div class="pick-cell ${person}">
+      <div class="poster-wrap${pc}">${img}</div>
+      <span class="pick-owner">${person.charAt(0).toUpperCase() + person.slice(1)}</span>
+      <div class="pick-name${nc}">${data.pick}</div>
+      <span class="vote-pct">${data.vote} of critics agree</span>
+    </div>`;
+  };
+
+  const card = document.createElement('div');
+  card.className = 'category-card';
+  card.style.animationDelay = `${i * 0.04}s`;
+  card.innerHTML = `
+    <div class="category-label">${p.category}</div>
+    <div class="picks-row">
+      ${cell('josh',     p.josh,     joshMatch)}
+      ${cell('juan',     p.juan,     juanMatch)}
+      ${cell('giuseppe', p.giuseppe, giuseppeMatch)}
+    </div>`;
+  container.appendChild(card);
 });
-
-document.getElementById('agree-count').textContent = agrees;
-document.getElementById('differ-count').textContent = differs;
 </script>
+
 </body>
 </html>
