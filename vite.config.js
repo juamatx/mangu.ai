@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  base: '/mangu.ai/',
+  base: '/',
   build: {
     chunkSizeWarningLimit: 600,
   },
