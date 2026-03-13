@@ -7,207 +7,42 @@
   <meta name="description" content="boiled. mashed. deployed.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@300;400;600&family=Cormorant:ital,wght@0,300;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@300;400&family=Cormorant:ital,wght@0,300;1,300;1,400&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
   <script type="module" src="/src/main.js"></script>
 </head>
 <body>
 
-  <header>
-    <span class="hdr-id">MANGÚ.AI</span>
-    <span class="hdr-status">
-      <span class="pulse"></span>
+  <header class="site-header">
+    <span class="site-wordmark">MANGÚ.AI</span>
+    <span class="site-status">
+      <span class="pulse-dot"></span>
       SEÑAL ACTIVA
     </span>
   </header>
 
   <!-- ── Hero ──────────────────────────────────────────────────────── -->
   <section class="hero" id="hero">
-
-    <!-- Three.js FBM wave canvas (injected by waves.js) -->
-
-    <!-- Rhythm rings (CSS, centered behind title) -->
-    <div class="rhythm-rings" aria-hidden="true">
-      <div class="ring"></div>
-      <div class="ring"></div>
-      <div class="ring"></div>
+    <div class="hero-inner">
+      <p class="hero-kicker">19.4517° N &nbsp;·&nbsp; 70.6970° W</p>
+      <h1 class="hero-title">man<em>gú</em></h1>
+      <div class="hero-rule" aria-hidden="true"></div>
+      <p class="hero-tagline">boiled.&nbsp;&nbsp;mashed.&nbsp;&nbsp;deployed.</p>
     </div>
-
-    <!-- ── Cartoon illustrated floaters ──────────────────────────── -->
-    <div class="floaters" aria-hidden="true">
-
-      <!-- Leaf 1: top-left, upright -->
-      <svg class="floater leaf-1" viewBox="0 0 90 265" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Shadow -->
-        <ellipse cx="48" cy="260" rx="28" ry="5" fill="#1a5a1a" opacity="0.12"/>
-        <!-- Main blade -->
-        <path d="M45 7C61 21 79 69 79 132C79 197 62 250 45 260C28 250 11 197 11 132C11 69 29 21 45 7Z" fill="#4db84a"/>
-        <!-- Highlight half -->
-        <path d="M45 7C52 21 61 67 61 132C61 195 53 248 45 260C37 248 35 196 36 132C37 70 40 22 45 7Z" fill="#73d870" opacity="0.55"/>
-        <!-- Specular -->
-        <path d="M42 18 Q44 132 42 252" stroke="white" stroke-width="5" stroke-linecap="round" opacity="0.2"/>
-        <!-- Midrib -->
-        <path d="M45 7 L45 260" stroke="#1a5a1a" stroke-width="2.8"/>
-        <!-- Veins left -->
-        <path d="M45 52L70 67 M45 84L72 97 M45 116L71 127 M45 148L70 157 M45 180L68 188 M45 212L65 218"
-              stroke="#1a5a1a" stroke-width="1.6" fill="none" opacity="0.7"/>
-        <!-- Veins right -->
-        <path d="M45 52L20 67 M45 84L18 97 M45 116L19 127 M45 148L20 157 M45 180L22 188 M45 212L25 218"
-              stroke="#1a5a1a" stroke-width="1.6" fill="none" opacity="0.7"/>
-        <!-- Bold outline -->
-        <path d="M45 7C61 21 79 69 79 132C79 197 62 250 45 260C28 250 11 197 11 132C11 69 29 21 45 7Z"
-              stroke="#1a5a1a" stroke-width="3.5" fill="none"/>
-      </svg>
-
-      <!-- Leaf 2: top-right, flipped + tilted -->
-      <svg class="floater leaf-2" viewBox="0 0 90 265" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="48" cy="260" rx="28" ry="5" fill="#1a5a1a" opacity="0.1"/>
-        <path d="M45 7C61 21 79 69 79 132C79 197 62 250 45 260C28 250 11 197 11 132C11 69 29 21 45 7Z" fill="#3fa83c"/>
-        <path d="M45 7C52 21 61 67 61 132C61 195 53 248 45 260C37 248 35 196 36 132C37 70 40 22 45 7Z" fill="#65cc62" opacity="0.48"/>
-        <path d="M42 18 Q44 132 42 252" stroke="white" stroke-width="5" stroke-linecap="round" opacity="0.18"/>
-        <path d="M45 7 L45 260" stroke="#165a16" stroke-width="2.8"/>
-        <path d="M45 55L70 70 M45 90L72 102 M45 125L70 134 M45 160L68 168 M45 195L65 201"
-              stroke="#165a16" stroke-width="1.6" fill="none" opacity="0.65"/>
-        <path d="M45 55L20 70 M45 90L18 102 M45 125L20 134 M45 160L22 168 M45 195L25 201"
-              stroke="#165a16" stroke-width="1.6" fill="none" opacity="0.65"/>
-        <path d="M45 7C61 21 79 69 79 132C79 197 62 250 45 260C28 250 11 197 11 132C11 69 29 21 45 7Z"
-              stroke="#165a16" stroke-width="3.5" fill="none"/>
-      </svg>
-
-      <!-- Leaf 3: bottom-left, smaller, rotated -->
-      <svg class="floater leaf-3" viewBox="0 0 90 265" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M45 7C61 21 79 69 79 132C79 197 62 250 45 260C28 250 11 197 11 132C11 69 29 21 45 7Z" fill="#56bf53"/>
-        <path d="M45 7C52 21 61 67 61 132C61 195 53 248 45 260C37 248 35 196 36 132C37 70 40 22 45 7Z" fill="#7ad877" opacity="0.45"/>
-        <path d="M42 18 Q44 132 42 252" stroke="white" stroke-width="5" stroke-linecap="round" opacity="0.18"/>
-        <path d="M45 7 L45 260" stroke="#1a5a1a" stroke-width="2.8"/>
-        <path d="M45 60L68 74 M45 100L70 110 M45 140L68 148 M45 180L65 186"
-              stroke="#1a5a1a" stroke-width="1.6" fill="none" opacity="0.6"/>
-        <path d="M45 60L22 74 M45 100L20 110 M45 140L22 148 M45 180L25 186"
-              stroke="#1a5a1a" stroke-width="1.6" fill="none" opacity="0.6"/>
-        <path d="M45 7C61 21 79 69 79 132C79 197 62 250 45 260C28 250 11 197 11 132C11 69 29 21 45 7Z"
-              stroke="#1a5a1a" stroke-width="3.5" fill="none"/>
-      </svg>
-
-      <!-- Tambora drum: illustrated cartoon drum, lower-right -->
-      <svg class="floater tambora" viewBox="0 0 140 172" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Drop shadow -->
-        <ellipse cx="70" cy="165" rx="50" ry="9" fill="#1a1208" opacity="0.15"/>
-        <!-- Drum body front face -->
-        <rect x="20" y="50" width="100" height="100" fill="#8B4513"/>
-        <!-- Coral band -->
-        <rect x="20" y="90" width="100" height="20" fill="#c14a24"/>
-        <!-- Gold stripe -->
-        <rect x="20" y="106" width="100" height="7" fill="#b07209"/>
-        <!-- Tension cords -->
-        <g stroke="#4a2408" stroke-width="2" opacity="0.75">
-          <line x1="34"  y1="63"  x2="34"  y2="150"/>
-          <line x1="52"  y1="63"  x2="52"  y2="150"/>
-          <line x1="70"  y1="63"  x2="70"  y2="150"/>
-          <line x1="88"  y1="63"  x2="88"  y2="150"/>
-          <line x1="106" y1="63"  x2="106" y2="150"/>
-        </g>
-        <!-- Body outline sides -->
-        <line x1="20" y1="50" x2="20" y2="150" stroke="#3a1204" stroke-width="3.5"/>
-        <line x1="120" y1="50" x2="120" y2="150" stroke="#3a1204" stroke-width="3.5"/>
-        <!-- Shine on body -->
-        <path d="M27 60 Q29 100 27 143" stroke="white" stroke-width="4" stroke-linecap="round" opacity="0.14"/>
-        <!-- Bottom ellipse -->
-        <ellipse cx="70" cy="150" rx="50" ry="13" fill="#6b2e06" stroke="#3a1204" stroke-width="3"/>
-        <!-- Back of top membrane (gives depth) -->
-        <ellipse cx="70" cy="50" rx="50" ry="13" fill="#d4b082" stroke="#3a1204" stroke-width="2"/>
-        <!-- Top membrane -->
-        <ellipse cx="70" cy="50" rx="50" ry="13" fill="#f0dcb5" stroke="#3a1204" stroke-width="3.5"/>
-        <!-- Membrane highlight -->
-        <ellipse cx="56" cy="47" rx="18" ry="6" fill="white" opacity="0.42"/>
-        <!-- Small tension knobs around membrane -->
-        <g fill="#6b2e06" stroke="#3a1204" stroke-width="1.5">
-          <circle cx="20"  cy="50" r="4"/>
-          <circle cx="36"  cy="38" r="4"/>
-          <circle cx="55"  cy="37" r="4"/>
-          <circle cx="70"  cy="37" r="4"/>
-          <circle cx="85"  cy="37" r="4"/>
-          <circle cx="104" cy="38" r="4"/>
-          <circle cx="120" cy="50" r="4"/>
-        </g>
-      </svg>
-
-    </div><!-- .floaters -->
-
-    <!-- Hero copy -->
-    <div class="hero-content">
-      <div class="sys-tag">
-        SYS_MSG — 19.4517°N — TRANSMISSION OPEN
-        <span class="cur"></span>
-      </div>
-      <h1>mangú</h1>
-      <p class="tagline">boiled. mashed. deployed.</p>
-      <p class="coords">19.4517° N &nbsp;·&nbsp; 70.6970° W</p>
-    </div>
-
-  </section>
-
-  <!-- ── Wavy SVG break ────────────────────────────────────────────── -->
-  <div class="wave-break" aria-hidden="true">
-    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0,30 C240,58 480,4 720,30 C960,56 1200,6 1440,30 L1440,60 L0,60Z" fill="#0d6e60" opacity="0.16"/>
-      <path d="M0,38 C280,12 520,56 760,36 C980,18 1220,52 1440,36 L1440,60 L0,60Z" fill="#0d6e60" opacity="0.1"/>
-    </svg>
-  </div>
-
-  <!-- ── Marquee ────────────────────────────────────────────────────── -->
-  <div class="marquee-wrap">
-    <div class="marquee-track">
-      <span class="m-block">MANGÚ.AI <span class="m-sep">◆</span> SEÑAL ACTIVA <span class="m-sep">◆</span> WARM DATA <span class="m-sep">◆</span> CARIBBEAN INTELLIGENCE <span class="m-sep">◆</span> COORDINATES LOCKED <span class="m-sep">◆</span> TRANSMITIENDO <span class="m-sep">◆</span> DATOS CALIENTES <span class="m-sep">◆</span> INFERENCE EN PROGRESO <span class="m-sep">◆</span> VERDE Y VERDE <span class="m-sep">◆</span> THE FUTURE PERO SABROSO <span class="m-sep">◆</span></span>
-      <span class="m-block">MANGÚ.AI <span class="m-sep">◆</span> SEÑAL ACTIVA <span class="m-sep">◆</span> WARM DATA <span class="m-sep">◆</span> CARIBBEAN INTELLIGENCE <span class="m-sep">◆</span> COORDINATES LOCKED <span class="m-sep">◆</span> TRANSMITIENDO <span class="m-sep">◆</span> DATOS CALIENTES <span class="m-sep">◆</span> INFERENCE EN PROGRESO <span class="m-sep">◆</span> VERDE Y VERDE <span class="m-sep">◆</span> THE FUTURE PERO SABROSO <span class="m-sep">◆</span></span>
-    </div>
-  </div>
-
-  <!-- ── Recipe ─────────────────────────────────────────────────────── -->
-  <section class="recipe">
-    <p class="kicker">RECETA / INGREDIENTS</p>
-    <h2 class="rec-title">Mangú Clásico <em>×</em> Neural Configuration</h2>
-    <div class="rule"></div>
-    <ul class="ingredients">
-      <li class="ing">
-        <span class="qty">3 lbs</span>
-        <span class="name">green plantains, boiled until soft</span>
-      </li>
-      <li class="ing">
-        <span class="qty">∞</span>
-        <span class="name ai">training cycles, cleaned + tokenized</span>
-      </li>
-      <li class="ing">
-        <span class="qty">2</span>
-        <span class="name">garlic cloves, encrypted at rest</span>
-      </li>
-      <li class="ing">
-        <span class="qty">1 tbsp</span>
-        <span class="name">olive oil, cold-pressed, lossless</span>
-      </li>
-      <li class="ing">
-        <span class="qty">½ cup</span>
-        <span class="name ai">warm water (temperature: gradient)</span>
-      </li>
-      <li class="ing">
-        <span class="qty">—</span>
-        <span class="name">salt, to taste (tune hyperparameter)</span>
-      </li>
-    </ul>
-    <div class="rec-note">
-      YIELD: 1 serving &nbsp;/&nbsp; ∞ inference calls<br>
-      METHOD: boil. mash. season. deploy.<br>
-      NOTE: do not over-train. serve warm.
+    <div class="hero-scroll" aria-hidden="true">
+      <span class="scroll-line"></span>
     </div>
   </section>
 
-  <!-- ── Contact ───────────────────────────────────────────────────── -->
-  <section class="contact">
-    <p class="contact-label">TRANSMIT TO</p>
-    <a href="mailto:hello@mangu.ai" class="contact-link">hello@mangu.ai</a>
+  <!-- ── Statement ─────────────────────────────────────────────────── -->
+  <section class="statement" id="statement">
+    <p class="statement-text">algo se está<br><em>cocinando</em></p>
   </section>
 
-  <footer>
-    <span class="ft">© 2026 mangu.ai</span>
-    <span class="ft coords">19.4517° N, 70.6970° W</span>
+  <!-- ── Footer ────────────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <span>© 2026 mangu.ai</span>
+    <a href="mailto:hello@mangu.ai" class="footer-email">hello@mangu.ai</a>
+    <span class="footer-coords">19° N &nbsp;·&nbsp; 70° W</span>
   </footer>
 
 </body>
