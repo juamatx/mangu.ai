@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oscar Ballot Showdown — Josh vs Juan vs Giuseppe</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Bebas+Neue&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --card-bg: #111111;
+    --card-hover: #181818;
+    --red: #e63946;
+    --gold: #d4a853;
+    --teal: #4ecdc4;
+    --white: #f0ece2;
+    --gray: #888;
+    --dim: #444;
+    --match-green: #2ecc71;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Source Sans 3', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .header {
+    text-align: center;
+    padding: 60px 20px 20px;
+  }
+
+  .header::after {
+    content: '';
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    height: 2px;
+    background: var(--red);
+    margin: 30px auto 0;
+  }
+
+  .header-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 10px;
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 900;
+    letter-spacing: -1px;
+    line-height: 1.15;
+    margin-bottom: 6px;
+  }
+
+  .header h1 .josh { color: var(--red); }
+  .header h1 .juan { color: var(--gold); }
+  .header h1 .giuseppe { color: var(--teal); }
+  .header h1 .vs { color: var(--dim); font-weight: 400; font-style: italic; font-size: 0.6em; }
+
+  .header .subtitle {
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--gray);
+    letter-spacing: 1px;
+  }
+
+  /* Column Headers */
+  .col-headers {
+    max-width: 960px;
+    margin: 40px auto 0;
+    padding: 0 20px 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+
+  .col-header {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 4px;
+    text-align: center;
+  }
+
+  .col-header.josh-h { color: var(--red); text-align: left; }
+  .col-header.juan-h { color: var(--gold); }
+  .col-header.giuseppe-h { color: var(--teal); text-align: right; }
+
+  /* Categories */
+  .categories {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  .category-card {
+    background: var(--card-bg);
+    border-left: 3px solid transparent;
+    margin-bottom: 2px;
+    padding: 18px 24px;
+    transition: all 0.25s ease;
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 0.4s ease forwards;
+  }
+
+  .category-card:hover {
+    background: var(--card-hover);
+    border-left-color: var(--red);
+  }
+
+  .category-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--dim);
+    padding-bottom: 10px;
+    border-bottom: 1px solid #1e1e1e;
+    margin-bottom: 12px;
+  }
+
+  .picks-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+
+  .pick-cell { position: relative; }
+
+  .pick-owner {
+    display: block;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+
+  .pick-cell.josh .pick-owner { color: var(--red); }
+  .pick-cell.juan .pick-owner { color: var(--gold); }
+  .pick-cell.giuseppe .pick-owner { color: var(--teal); }
+
+  .pick-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  /* Match highlight: green underline */
+  .pick-name.matched {
+    text-decoration: underline;
+    text-decoration-color: var(--match-green);
+    text-underline-offset: 4px;
+    text-decoration-thickness: 2px;
+    color: var(--match-green);
+  }
+
+  .pick-cell.juan { text-align: center; }
+  .pick-cell.giuseppe { text-align: right; }
+
+  .pick-name.tbd {
+    color: var(--dim);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 14px;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 40px 20px 60px;
+    font-size: 12px;
+    color: var(--dim);
+    letter-spacing: 2px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 640px) {
+    .picks-row {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .pick-cell, .pick-cell.juan, .pick-cell.giuseppe { text-align: left; }
+    .pick-cell {
+      padding-left: 14px;
+      border-left: 2px solid transparent;
+    }
+    .pick-cell.josh { border-left-color: var(--red); }
+    .pick-cell.juan { border-left-color: var(--gold); }
+    .pick-cell.giuseppe { border-left-color: var(--teal); }
+    .col-headers { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-label">98th Academy Awards Ballot</div>
+  <h1>
+    <span class="josh">Josh</span> <span class="vs">vs</span>
+    <span class="juan">Juan</span> <span class="vs">vs</span>
+    <span class="giuseppe">Giuseppe</span>
+  </h1>
+  <div class="subtitle">Every pick. Every category. Who called it?</div>
+</div>
+
+<div class="col-headers">
+  <div class="col-header josh-h">Josh</div>
+  <div class="col-header juan-h">Juan</div>
+  <div class="col-header giuseppe-h">Giuseppe</div>
+</div>
+
+<div class="categories" id="categories"></div>
+
+<div class="footer">VANITY FAIR OSCAR BALLOT COMPARISON · 2026</div>
+
+<script>
+const picks = [
+  { category: "Best Picture", josh: "Hamnet", juan: "One Battle After Another", giuseppe: null },
+  { category: "Best Director", josh: "Ryan Coogler", juan: "Paul Thomas Anderson", giuseppe: null },
+  { category: "Best Actress", josh: "Jessie Buckley", juan: "Jessie Buckley", giuseppe: null },
+  { category: "Best Actor", josh: "Michael B. Jordan", juan: "Michael B. Jordan", giuseppe: null },
+  { category: "Best Supporting Actress", josh: "Teyana Taylor", juan: "Teyana Taylor", giuseppe: null },
+  { category: "Best Supporting Actor", josh: "Stellan Skarsgård", juan: "Delroy Lindo", giuseppe: null },
+  { category: "Best Original Screenplay", josh: "Sinners", juan: "Sinners", giuseppe: null },
+  { category: "Best Adapted Screenplay", josh: "Hamnet", juan: "Hamnet", giuseppe: null },
+  { category: "Best International Feature", josh: "The Voice of Hind Rajab", juan: "The Secret Agent", giuseppe: null },
+  { category: "Best Animated Feature", josh: "KPop Demon Hunters", juan: "Little Amélie or the Character of Rain", giuseppe: null },
+  { category: "Best Documentary Feature", josh: "The Perfect Neighbor", juan: "Come See Me in the Good Light", giuseppe: null },
+  { category: "Best Original Score", josh: "Frankenstein", juan: "Sinners", giuseppe: null },
+  { category: "Best Original Song", josh: "Golden", juan: "Golden", giuseppe: null },
+  { category: "Best Cinematography", josh: "Train Dreams", juan: "Train Dreams", giuseppe: null },
+  { category: "Best Costume Design", josh: "Frankenstein", juan: "Frankenstein", giuseppe: null },
+  { category: "Best Film Editing", josh: "F1", juan: "F1", giuseppe: null },
+  { category: "Best Casting", josh: "One Battle After Another", juan: "One Battle After Another", giuseppe: null },
+  { category: "Best Makeup and Hairstyling", josh: "Frankenstein", juan: "Frankenstein", giuseppe: null },
+  { category: "Best Production Design", josh: "Sinners", juan: "One Battle After Another", giuseppe: null },
+  { category: "Best Sound", josh: "F1", juan: "F1", giuseppe: null },
+  { category: "Best Visual Effects", josh: "Avatar: Fire and Ash", juan: "Avatar: Fire and Ash", giuseppe: null },
+  { category: "Best Animated Short", josh: "Retirement Plan", juan: "Butterfly", giuseppe: null },
+  { category: "Best Live-Action Short", josh: "A Friend of Dorothy", juan: "The Singers", giuseppe: null },
+  { category: "Best Documentary Short", josh: 'Children No More: "Were and Are Gone"', juan: "The Devil Is Busy", giuseppe: null },
+];
+
+const container = document.getElementById('categories');
+
+picks.forEach((p, i) => {
+  const jj = p.josh && p.juan && p.josh === p.juan;
+  const jg = p.josh && p.giuseppe && p.josh === p.giuseppe;
+  const ug = p.juan && p.giuseppe && p.juan === p.giuseppe;
+
+  // Determine which cells should be highlighted
+  const joshMatch = jj || jg;
+  const juanMatch = jj || ug;
+  const giuseppeMatch = jg || ug;
+
+  const card = document.createElement('div');
+  card.className = 'category-card';
+  card.style.animationDelay = `${i * 0.035}s`;
+
+  card.innerHTML = `
+    <div class="category-label">${p.category}</div>
+    <div class="picks-row">
+      <div class="pick-cell josh">
+        <span class="pick-owner">Josh</span>
+        <div class="pick-name${joshMatch ? ' matched' : ''}">${p.josh}</div>
+      </div>
+      <div class="pick-cell juan">
+        <span class="pick-owner">Juan</span>
+        <div class="pick-name${juanMatch ? ' matched' : ''}">${p.juan}</div>
+      </div>
+      <div class="pick-cell giuseppe">
+        <span class="pick-owner">Giuseppe</span>
+        <div class="pick-name${!p.giuseppe ? ' tbd' : giuseppeMatch ? ' matched' : ''}">${p.giuseppe || 'TBD'}</div>
+      </div>
+    </div>
+  `;
+
+  container.appendChild(card);
+});
+</script>
+
+</body>
+</html>

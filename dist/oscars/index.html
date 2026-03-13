@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oscars 2026 · Josh vs Juan · mangu.ai</title>
+  <meta name="description" content="Oscar predictions showdown: Josh vs Juan">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #f7f3ec;
+      --card:      #faf7f2;
+      --ink:       #1c160e;
+      --ink-mid:   #6b5f50;
+      --ink-faint: rgba(28, 22, 14, 0.10);
+      --teal:      #0d6e60;
+      --teal-soft: rgba(13, 110, 96, 0.10);
+      --gold:      #b07209;
+      --gold-soft: rgba(176, 114, 9, 0.10);
+      --agree-bg:  rgba(13, 110, 96, 0.06);
+      --dot:       rgba(150, 120, 85, 0.16);
+      --ff-serif:  'Fraunces', Georgia, serif;
+      --ff-mono:   'DM Mono', monospace;
+      --radius:    12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      background-image: radial-gradient(var(--dot) 1.2px, transparent 1.2px);
+      background-size: 28px 28px;
+      color: var(--ink);
+      font-family: var(--ff-serif);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* ── Header ─────────────────────────────────────── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      background: rgba(247, 243, 236, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--ink-faint);
+    }
+
+    .header-back {
+      font-family: var(--ff-mono);
+      font-size: 0.60rem;
+      letter-spacing: 0.14em;
+      color: var(--ink-mid);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.2s;
+    }
+    .header-back:hover { color: var(--teal); }
+    .header-back::before { content: '←'; }
+
+    .header-title {
+      font-family: var(--ff-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      color: var(--ink);
+      text-transform: uppercase;
+    }
+
+    /* ── Hero ───────────────────────────────────────── */
+    .page-hero {
+      padding: 3rem 1.25rem 2rem;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .page-eyebrow {
+      font-family: var(--ff-mono);
+      font-size: 0.60rem;
+      letter-spacing: 0.22em;
+      color: var(--ink-mid);
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .page-title {
+      font-family: var(--ff-serif);
+      font-weight: 300;
+      font-optical-sizing: auto;
+      font-variation-settings: "opsz" 72;
+      font-size: clamp(2.8rem, 10vw, 4.5rem);
+      line-height: 0.95;
+      color: var(--ink);
+      margin-bottom: 2rem;
+    }
+
+    .page-title em { font-style: italic; color: var(--teal); }
+
+    /* Scoreboard */
+    .scoreboard {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: var(--card);
+      border: 1px solid var(--ink-faint);
+      border-radius: var(--radius);
+      margin-bottom: 0.5rem;
+    }
+
+    .score-stat {
+      text-align: center;
+      flex: 1;
+    }
+
+    .score-number {
+      font-family: var(--ff-serif);
+      font-weight: 300;
+      font-size: 2.2rem;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .score-label {
+      font-family: var(--ff-mono);
+      font-size: 0.52rem;
+      letter-spacing: 0.14em;
+      color: var(--ink-mid);
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+
+    .score-divider {
+      width: 1px;
+      height: 2.5rem;
+      background: var(--ink-faint);
+    }
+
+    /* Legend */
+    .legend {
+      display: flex;
+      gap: 1rem;
+      padding: 0.75rem 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--ff-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.10em;
+      color: var(--ink-mid);
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .legend-dot.josh { background: var(--teal); }
+    .legend-dot.juan { background: var(--gold); }
+    .legend-dot.agree { background: var(--ink-faint); border: 1px solid var(--ink-mid); }
+
+    /* ── Category sections ──────────────────────────── */
+    .categories {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 1.25rem 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .section-label {
+      font-family: var(--ff-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.22em;
+      color: var(--ink-mid);
+      text-transform: uppercase;
+      padding: 1.5rem 0 0.5rem;
+      opacity: 0.7;
+    }
+
+    /* ── Card ───────────────────────────────────────── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--ink-faint);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .card.agree {
+      background: var(--agree-bg);
+      border-color: rgba(13, 110, 96, 0.18);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid var(--ink-faint);
+    }
+
+    .card-category {
+      font-family: var(--ff-mono);
+      font-size: 0.56rem;
+      letter-spacing: 0.18em;
+      color: var(--ink-mid);
+      text-transform: uppercase;
+    }
+
+    .agree-badge {
+      font-family: var(--ff-mono);
+      font-size: 0.50rem;
+      letter-spacing: 0.10em;
+      color: var(--teal);
+      background: rgba(13, 110, 96, 0.12);
+      padding: 2px 7px;
+      border-radius: 20px;
+    }
+
+    /* ── Disagree layout: two columns ──────────────── */
+    .picks-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .pick {
+      padding: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      position: relative;
+    }
+
+    .pick.josh { border-right: 1px solid var(--ink-faint); }
+    .pick.josh::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--teal);
+      border-radius: 0 2px 2px 0;
+    }
+    .pick.juan::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 3px; height: 100%;
+      background: var(--gold);
+      border-radius: 2px 0 0 2px;
+    }
+
+    .pick-img-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      background: var(--ink-faint);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .pick-img-wrap.person {
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      width: 70px;
+      align-self: center;
+    }
+
+    .pick-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .pick-img-wrap img.loaded { opacity: 1; }
+
+    /* Shimmer skeleton */
+    .pick-img-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255,255,255,0.4) 50%,
+        transparent 100%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.6s ease-in-out infinite;
+    }
+
+    .pick-img-wrap.done::after { display: none; }
+
+    @keyframes shimmer {
+      0%   { background-position: -200% 0; }
+      100% { background-position:  200% 0; }
+    }
+
+    /* Fallback initial */
+    .pick-img-wrap .fallback {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--ff-serif);
+      font-size: 1.4rem;
+      color: var(--ink-mid);
+      opacity: 0.4;
+    }
+
+    .pick-name {
+      font-family: var(--ff-serif);
+      font-weight: 300;
+      font-optical-sizing: auto;
+      font-size: 0.88rem;
+      line-height: 1.2;
+      color: var(--ink);
+    }
+
+    .pick-voter {
+      font-family: var(--ff-mono);
+      font-size: 0.52rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .pick-voter.josh { color: var(--teal); }
+    .pick-voter.juan { color: var(--gold); }
+
+    /* ── Agree layout: horizontal ───────────────────── */
+    .agree-pick {
+      padding: 0.9rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .agree-pick .pick-img-wrap {
+      flex-shrink: 0;
+      width: 52px;
+    }
+
+    .agree-pick .pick-img-wrap.person {
+      width: 52px;
+      height: 52px;
+    }
+
+    .agree-info { flex: 1; }
+
+    .agree-info .pick-name {
+      font-size: 0.95rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .agree-voters {
+      font-family: var(--ff-mono);
+      font-size: 0.52rem;
+      letter-spacing: 0.10em;
+    }
+
+    .agree-voters .josh { color: var(--teal); }
+    .agree-voters .juan { color: var(--gold); }
+
+    /* ── Footer ─────────────────────────────────────── */
+    .site-footer {
+      text-align: center;
+      padding: 2rem 1.25rem;
+      border-top: 1px solid var(--ink-faint);
+      font-family: var(--ff-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      color: var(--ink-mid);
+    }
+
+    .site-footer a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .site-footer a:hover { color: var(--teal); }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="/" class="header-back">mangu.ai</a>
+    <span class="header-title">Oscars 2026</span>
+    <span style="width:60px"></span><!-- balance -->
+  </header>
+
+  <div class="page-hero">
+    <p class="page-eyebrow">Academy Awards · 2026</p>
+    <h1 class="page-title">Josh<br>vs <em>Juan</em></h1>
+
+    <div class="scoreboard">
+      <div class="score-stat">
+        <div class="score-number" id="agree-count">–</div>
+        <div class="score-label">Agree</div>
+      </div>
+      <div class="score-divider"></div>
+      <div class="score-stat">
+        <div class="score-number" id="differ-count">–</div>
+        <div class="score-label">Differ</div>
+      </div>
+      <div class="score-divider"></div>
+      <div class="score-stat">
+        <div class="score-number">24</div>
+        <div class="score-label">Categories</div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-dot josh"></div> Josh
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot juan"></div> Juan
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot agree"></div> Both agree
+      </div>
+    </div>
+  </div>
+
+  <main class="categories" id="categories"></main>
+
+  <footer class="site-footer">
+    <a href="/">mangú.ai</a> &nbsp;·&nbsp; 19.4517° N, 70.6970° W
+  </footer>
+
+  <script>
+    // ── Data ────────────────────────────────────────────────────────
+    const PICKS = [
+      // ── Performance ────────────────────────────────────────────
+      { group: "Performance",
+        cat: "Best Picture",         type: "film",   josh: "Hamnet",                     juan: "One Battle After Another" },
+      { cat: "Best Director",        type: "person", josh: "Ryan Coogler",               juan: "Paul Thomas Anderson" },
+      { cat: "Best Actress",         type: "person", josh: "Jessie Buckley",             juan: "Jessie Buckley" },
+      { cat: "Best Actor",           type: "person", josh: "Michael B. Jordan",          juan: "Michael B. Jordan" },
+      { cat: "Best Supporting Actress", type: "person", josh: "Teyana Taylor",           juan: "Teyana Taylor" },
+      { cat: "Best Supporting Actor",   type: "person", josh: "Stellan Skarsgård",       juan: "Delroy Lindo" },
+      // ── Screenplay ─────────────────────────────────────────────
+      { group: "Screenplay",
+        cat: "Best Original Screenplay",  type: "film", josh: "Sinners",    juan: "Sinners" },
+      { cat: "Best Adapted Screenplay",   type: "film", josh: "Hamnet",     juan: "Hamnet" },
+      // ── Specialty ──────────────────────────────────────────────
+      { group: "Specialty",
+        cat: "Best International Feature", type: "film", josh: "The Voice of Hind Rajab", juan: "The Secret Agent" },
+      { cat: "Best Animated Feature",      type: "film", josh: "KPop Demon Hunters",       juan: "Little Amélie or the Character of Rain" },
+      { cat: "Best Documentary Feature",   type: "film", josh: "The Perfect Neighbor",     juan: "Come See Me in the Good Light" },
+      // ── Craft ──────────────────────────────────────────────────
+      { group: "Craft",
+        cat: "Best Original Score",       type: "film", josh: "Frankenstein",   juan: "Sinners" },
+      { cat: "Best Original Song",        type: "film", josh: "Golden",         juan: "Golden" },
+      { cat: "Best Cinematography",       type: "film", josh: "Train Dreams",   juan: "Train Dreams" },
+      { cat: "Best Costume Design",       type: "film", josh: "Frankenstein",   juan: "Frankenstein" },
+      { cat: "Best Film Editing",         type: "film", josh: "F1",             juan: "F1" },
+      { cat: "Best Casting",              type: "film", josh: "One Battle After Another", juan: "One Battle After Another" },
+      { cat: "Best Makeup and Hairstyling", type: "film", josh: "Frankenstein", juan: "Frankenstein" },
+      { cat: "Best Production Design",    type: "film", josh: "Sinners",        juan: "One Battle After Another" },
+      { cat: "Best Sound",                type: "film", josh: "F1",             juan: "F1" },
+      { cat: "Best Visual Effects",       type: "film", josh: "Avatar: Fire and Ash", juan: "Avatar: Fire and Ash" },
+      // ── Shorts ─────────────────────────────────────────────────
+      { group: "Shorts",
+        cat: "Best Animated Short",       type: "film", josh: "Retirement Plan",                           juan: "Butterfly" },
+      { cat: "Best Live-Action Short",    type: "film", josh: "A Friend of Dorothy",                       juan: "The Singers" },
+      { cat: "Best Documentary Short",    type: "film", josh: "Children No More: "Were and Are Gone"", juan: "The Devil Is Busy" },
+    ];
+
+    // ── Wikipedia title mapping ──────────────────────────────────
+    const WIKI = {
+      // Films
+      "Hamnet":                        "Hamnet (film)",
+      "One Battle After Another":      "One Battle After Another",
+      "Sinners":                       "Sinners (2025 film)",
+      "F1":                            "F1 (film)",
+      "Frankenstein":                  "Frankenstein (2025 film)",
+      "Train Dreams":                  "Train Dreams (film)",
+      "Avatar: Fire and Ash":          "Avatar: Fire and Ash",
+      "The Voice of Hind Rajab":       "The Voice of Hind Rajab",
+      "The Secret Agent":              "The Secret Agent (2025 film)",
+      "KPop Demon Hunters":            "K-Pop Demon Hunters",
+      "The Perfect Neighbor":          "The Perfect Neighbor",
+      "Come See Me in the Good Light": "Come See Me in the Good Light",
+      "Golden":                        "Sinners (2025 film)",
+      "The Devil Is Busy":             "The Devil Is Busy",
+      "A Friend of Dorothy":           "A Friend of Dorothy",
+      // People
+      "Ryan Coogler":       "Ryan Coogler",
+      "Paul Thomas Anderson": "Paul Thomas Anderson",
+      "Jessie Buckley":     "Jessie Buckley",
+      "Michael B. Jordan":  "Michael B. Jordan",
+      "Teyana Taylor":      "Teyana Taylor",
+      "Stellan Skarsgård":  "Stellan Skarsgård",
+      "Delroy Lindo":       "Delroy Lindo",
+    };
+
+    // Cache so we don't fetch the same subject twice
+    const imgCache = {};
+
+    async function getImage(name) {
+      if (imgCache[name] !== undefined) return imgCache[name];
+      const title = WIKI[name];
+      if (!title) { imgCache[name] = null; return null; }
+      try {
+        const r = await fetch(
+          `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`,
+          { headers: { Accept: 'application/json' } }
+        );
+        if (!r.ok) throw new Error();
+        const d = await r.json();
+        imgCache[name] = d.thumbnail?.source ?? null;
+      } catch {
+        imgCache[name] = null;
+      }
+      return imgCache[name];
+    }
+
+    // ── DOM helpers ─────────────────────────────────────────────
+    function imgWrap(name, type) {
+      const wrap = document.createElement('div');
+      wrap.className = 'pick-img-wrap' + (type === 'person' ? ' person' : '');
+
+      const fb = document.createElement('div');
+      fb.className = 'fallback';
+      fb.textContent = name.charAt(0).toUpperCase();
+      wrap.appendChild(fb);
+
+      const img = document.createElement('img');
+      img.alt = name;
+      img.loading = 'lazy';
+
+      getImage(name).then(src => {
+        wrap.classList.add('done');
+        if (src) {
+          img.src = src;
+          img.onload = () => img.classList.add('loaded');
+          fb.style.display = 'none';
+          wrap.appendChild(img);
+        }
+      });
+
+      return wrap;
+    }
+
+    function el(tag, cls, text) {
+      const e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (text !== undefined) e.textContent = text;
+      return e;
+    }
+
+    function buildDisagreeCard(item) {
+      const card = el('div', 'card');
+
+      const hdr = el('div', 'card-header');
+      hdr.appendChild(el('span', 'card-category', item.cat));
+      card.appendChild(hdr);
+
+      const grid = el('div', 'picks-grid');
+
+      function makePick(name, voter) {
+        const pick = el('div', `pick ${voter}`);
+        pick.appendChild(imgWrap(name, item.type));
+        pick.appendChild(el('div', 'pick-name', name));
+        pick.appendChild(el('div', `pick-voter ${voter}`, voter.charAt(0).toUpperCase() + voter.slice(1)));
+        return pick;
+      }
+
+      grid.appendChild(makePick(item.josh, 'josh'));
+      grid.appendChild(makePick(item.juan, 'juan'));
+      card.appendChild(grid);
+      return card;
+    }
+
+    function buildAgreeCard(item) {
+      const card = el('div', 'card agree');
+
+      const hdr = el('div', 'card-header');
+      hdr.appendChild(el('span', 'card-category', item.cat));
+      hdr.appendChild(el('span', 'agree-badge', '✓ agree'));
+      card.appendChild(hdr);
+
+      const row = el('div', 'agree-pick');
+      row.appendChild(imgWrap(item.josh, item.type));
+
+      const info = el('div', 'agree-info');
+      info.appendChild(el('div', 'pick-name', item.josh));
+
+      const voters = el('div', 'agree-voters');
+      const j = el('span', 'josh', 'Josh');
+      const sep = el('span', null, ' · ');
+      sep.style.color = 'var(--ink-mid)';
+      const n = el('span', 'juan', 'Juan');
+      voters.appendChild(j);
+      voters.appendChild(sep);
+      voters.appendChild(n);
+      info.appendChild(voters);
+      row.appendChild(info);
+      card.appendChild(row);
+      return card;
+    }
+
+    // ── Render ───────────────────────────────────────────────────
+    const container = document.getElementById('categories');
+    let agreeCount = 0;
+
+    PICKS.forEach(item => {
+      const agree = item.josh === item.juan;
+      if (agree) agreeCount++;
+
+      if (item.group) {
+        const label = document.createElement('div');
+        label.className = 'section-label';
+        label.textContent = item.group;
+        container.appendChild(label);
+      }
+
+      container.appendChild(
+        agree ? buildAgreeCard(item) : buildDisagreeCard(item)
+      );
+    });
+
+    document.getElementById('agree-count').textContent = agreeCount;
+    document.getElementById('differ-count').textContent = PICKS.length - agreeCount;
+  </script>
+</body>
+</html>

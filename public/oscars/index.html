@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oscars 2026 · Josh vs Juan · mangu.ai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #0e0e0f;
+      --surface:    #181819;
+      --surface-2:  #222224;
+      --border:     rgba(255,255,255,0.07);
+      --ink:        #f0ede8;
+      --ink-mid:    rgba(240,237,232,0.45);
+      --ink-faint:  rgba(240,237,232,0.10);
+      --teal:       #2dd4bf;
+      --teal-dim:   rgba(45,212,191,0.12);
+      --gold:       #f0b429;
+      --gold-dim:   rgba(240,180,41,0.12);
+      --agree:      rgba(45,212,191,0.08);
+      --agree-border: rgba(45,212,191,0.22);
+      --ff-serif: 'Fraunces', Georgia, serif;
+      --ff-mono:  'DM Mono', monospace;
+      --r: 10px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--ff-serif);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* ── Header ─────────────────────────────────────── */
+    .site-header {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.9rem 1.25rem;
+      background: rgba(14,14,15,0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .site-header::after {
+      content: '';
+      position: absolute; bottom: -2px; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, var(--teal), var(--gold), transparent);
+      opacity: 0.6;
+    }
+
+    .header-back {
+      font-family: var(--ff-mono); font-size: 0.58rem;
+      letter-spacing: 0.14em; color: var(--ink-mid);
+      text-decoration: none; display: flex; align-items: center; gap: 0.4rem;
+      transition: color 0.2s;
+    }
+    .header-back::before { content: '←'; }
+    .header-back:hover { color: var(--teal); }
+
+    .header-title {
+      font-family: var(--ff-mono); font-size: 0.60rem;
+      letter-spacing: 0.18em; color: var(--ink-mid); text-transform: uppercase;
+    }
+
+    /* ── Hero ───────────────────────────────────────── */
+    .page-hero {
+      padding: 3rem 1.25rem 2rem;
+      max-width: 640px; margin: 0 auto;
+    }
+
+    .page-eyebrow {
+      font-family: var(--ff-mono); font-size: 0.58rem;
+      letter-spacing: 0.22em; color: var(--ink-mid);
+      text-transform: uppercase; margin-bottom: 0.75rem;
+    }
+
+    .page-title {
+      font-family: var(--ff-serif); font-weight: 300;
+      font-optical-sizing: auto; font-variation-settings: "opsz" 72;
+      font-size: clamp(3rem, 12vw, 5rem);
+      line-height: 0.95; color: var(--ink); margin-bottom: 2rem;
+    }
+    .page-title em { font-style: italic; color: var(--teal); }
+
+    /* Scoreboard */
+    .scoreboard {
+      display: flex; align-items: center; gap: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r); margin-bottom: 0.75rem; overflow: hidden;
+    }
+
+    .score-stat { text-align: center; flex: 1; padding: 1rem 0.5rem; }
+
+    .score-number {
+      font-family: var(--ff-serif); font-weight: 300;
+      font-size: 2.2rem; line-height: 1; color: var(--ink);
+    }
+
+    .score-label {
+      font-family: var(--ff-mono); font-size: 0.50rem;
+      letter-spacing: 0.14em; color: var(--ink-mid);
+      text-transform: uppercase; margin-top: 0.25rem;
+    }
+
+    .score-divider { width: 1px; align-self: stretch; background: var(--border); }
+
+    /* Legend */
+    .legend {
+      display: flex; gap: 1.25rem;
+      padding: 0.5rem 0 1.5rem;
+    }
+
+    .legend-item {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-family: var(--ff-mono); font-size: 0.56rem;
+      letter-spacing: 0.10em; color: var(--ink-mid);
+    }
+
+    .legend-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .legend-dot.josh  { background: var(--teal); }
+    .legend-dot.juan  { background: var(--gold); }
+    .legend-dot.agree { background: transparent; border: 1px solid rgba(240,237,232,0.3); }
+
+    /* ── Categories ─────────────────────────────────── */
+    .categories {
+      max-width: 640px; margin: 0 auto;
+      padding: 0 1.25rem 5rem;
+      display: flex; flex-direction: column; gap: 0.6rem;
+    }
+
+    .section-label {
+      font-family: var(--ff-mono); font-size: 0.52rem;
+      letter-spacing: 0.24em; color: var(--ink-mid);
+      text-transform: uppercase; padding: 1.25rem 0 0.25rem;
+      border-top: 1px solid var(--border); margin-top: 0.75rem;
+    }
+
+    .section-label:first-child { border-top: none; margin-top: 0; }
+
+    /* ── Card ───────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r); overflow: hidden;
+    }
+
+    .card.agree {
+      background: var(--agree);
+      border-color: var(--agree-border);
+    }
+
+    .card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.6rem 0.9rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-category {
+      font-family: var(--ff-mono); font-size: 0.54rem;
+      letter-spacing: 0.16em; color: var(--ink-mid); text-transform: uppercase;
+    }
+
+    .agree-badge {
+      font-family: var(--ff-mono); font-size: 0.50rem; letter-spacing: 0.08em;
+      color: var(--teal);
+      background: rgba(45,212,191,0.12);
+      padding: 2px 8px; border-radius: 20px;
+    }
+
+    /* ── Disagree: two columns ──────────────────────── */
+    .picks-grid { display: grid; grid-template-columns: 1fr 1fr; }
+
+    .pick { padding: 0.8rem; display: flex; flex-direction: column; gap: 0.55rem; position: relative; }
+    .pick.josh { border-right: 1px solid var(--border); }
+    .pick.josh::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 2px; height: 100%; background: var(--teal);
+    }
+    .pick.juan::before {
+      content: ''; position: absolute; top: 0; right: 0;
+      width: 2px; height: 100%; background: var(--gold);
+    }
+
+    /* ── Image container ────────────────────────────── */
+    .img-wrap {
+      position: relative; width: 100%; aspect-ratio: 2/3;
+      background: var(--surface-2); border-radius: 6px; overflow: hidden;
+    }
+
+    .img-wrap.person { aspect-ratio: 1/1; border-radius: 50%; width: 60px; align-self: center; }
+
+    .img-wrap img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; object-fit: cover;
+      opacity: 0; transition: opacity 0.5s ease;
+    }
+    .img-wrap img.loaded { opacity: 1; }
+
+    /* Shimmer */
+    .img-wrap::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 1.8s ease-in-out infinite;
+    }
+    .img-wrap.loaded-img::before { display: none; }
+
+    /* Fallback letter */
+    .img-wrap .fallback-letter {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--ff-serif); font-size: 1.6rem;
+      color: var(--ink-mid); opacity: 0.3;
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: -200% 0; }
+      100% { background-position:  200% 0; }
+    }
+
+    .pick-name {
+      font-family: var(--ff-serif); font-weight: 300;
+      font-optical-sizing: auto; font-size: 0.85rem;
+      line-height: 1.25; color: var(--ink);
+    }
+
+    .pick-voter {
+      font-family: var(--ff-mono); font-size: 0.50rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .pick-voter.josh { color: var(--teal); }
+    .pick-voter.juan { color: var(--gold); }
+
+    /* ── Agree: horizontal row ──────────────────────── */
+    .agree-row { padding: 0.8rem 0.9rem; display: flex; align-items: center; gap: 0.9rem; }
+
+    .agree-row .img-wrap { flex-shrink: 0; width: 48px; }
+    .agree-row .img-wrap.person { width: 48px; height: 48px; }
+
+    .agree-info {}
+    .agree-info .pick-name { font-size: 0.90rem; margin-bottom: 0.3rem; }
+
+    .agree-voters {
+      font-family: var(--ff-mono); font-size: 0.50rem; letter-spacing: 0.10em;
+      display: flex; align-items: center; gap: 0.35rem;
+    }
+    .agree-voters .sep { color: var(--ink-faint); }
+
+    /* ── Footer ─────────────────────────────────────── */
+    .site-footer {
+      text-align: center; padding: 2rem 1.25rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--ff-mono); font-size: 0.56rem;
+      letter-spacing: 0.14em; color: var(--ink-mid);
+    }
+    .site-footer a { color: var(--ink-mid); text-decoration: none; }
+    .site-footer a:hover { color: var(--teal); }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="/" class="header-back">mangu.ai</a>
+    <span class="header-title">Oscars 2026</span>
+    <span style="width:56px"></span>
+  </header>
+
+  <div class="page-hero">
+    <p class="page-eyebrow">Academy Awards · 2026</p>
+    <h1 class="page-title">Josh<br>vs <em>Juan</em></h1>
+
+    <div class="scoreboard">
+      <div class="score-stat">
+        <div class="score-number" id="agree-count">13</div>
+        <div class="score-label">Agree</div>
+      </div>
+      <div class="score-divider"></div>
+      <div class="score-stat">
+        <div class="score-number" id="differ-count">11</div>
+        <div class="score-label">Differ</div>
+      </div>
+      <div class="score-divider"></div>
+      <div class="score-stat">
+        <div class="score-number">24</div>
+        <div class="score-label">Categories</div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot josh"></div>Josh</div>
+      <div class="legend-item"><div class="legend-dot juan"></div>Juan</div>
+      <div class="legend-item"><div class="legend-dot agree"></div>Both agree</div>
+    </div>
+  </div>
+
+  <main class="categories" id="categories"></main>
+
+  <footer class="site-footer">
+    <a href="/">mangú.ai</a> &nbsp;·&nbsp; 19.4517° N, 70.6970° W
+  </footer>
+
+<script>
+// ── Picks data ──────────────────────────────────────────────────────────
+const PICKS = [
+  { group: 'Performance',
+    cat: 'Best Picture',              type: 'film',   josh: 'Hamnet',                               juan: 'One Battle After Another' },
+  { cat: 'Best Director',             type: 'person', josh: 'Ryan Coogler',                         juan: 'Paul Thomas Anderson' },
+  { cat: 'Best Actress',              type: 'person', josh: 'Jessie Buckley',                       juan: 'Jessie Buckley' },
+  { cat: 'Best Actor',                type: 'person', josh: 'Michael B. Jordan',                    juan: 'Michael B. Jordan' },
+  { cat: 'Best Supporting Actress',   type: 'person', josh: 'Teyana Taylor',                        juan: 'Teyana Taylor' },
+  { cat: 'Best Supporting Actor',     type: 'person', josh: 'Stellan Skarsgård',                    juan: 'Delroy Lindo' },
+
+  { group: 'Screenplay',
+    cat: 'Best Original Screenplay',  type: 'film',   josh: 'Sinners',                              juan: 'Sinners' },
+  { cat: 'Best Adapted Screenplay',   type: 'film',   josh: 'Hamnet',                               juan: 'Hamnet' },
+
+  { group: 'Specialty',
+    cat: 'Best International Feature',type: 'film',   josh: 'The Voice of Hind Rajab',              juan: 'The Secret Agent' },
+  { cat: 'Best Animated Feature',     type: 'film',   josh: 'KPop Demon Hunters',                   juan: 'Little Amélie or the Character of Rain' },
+  { cat: 'Best Documentary Feature',  type: 'film',   josh: 'The Perfect Neighbor',                 juan: 'Come See Me in the Good Light' },
+
+  { group: 'Craft',
+    cat: 'Best Original Score',       type: 'film',   josh: 'Frankenstein',                         juan: 'Sinners' },
+  { cat: 'Best Original Song',        type: 'film',   josh: 'Golden',                               juan: 'Golden' },
+  { cat: 'Best Cinematography',       type: 'film',   josh: 'Train Dreams',                         juan: 'Train Dreams' },
+  { cat: 'Best Costume Design',       type: 'film',   josh: 'Frankenstein',                         juan: 'Frankenstein' },
+  { cat: 'Best Film Editing',         type: 'film',   josh: 'F1',                                   juan: 'F1' },
+  { cat: 'Best Casting',              type: 'film',   josh: 'One Battle After Another',             juan: 'One Battle After Another' },
+  { cat: 'Best Makeup and Hairstyling',type:'film',   josh: 'Frankenstein',                         juan: 'Frankenstein' },
+  { cat: 'Best Production Design',    type: 'film',   josh: 'Sinners',                              juan: 'One Battle After Another' },
+  { cat: 'Best Sound',                type: 'film',   josh: 'F1',                                   juan: 'F1' },
+  { cat: 'Best Visual Effects',       type: 'film',   josh: 'Avatar: Fire and Ash',                 juan: 'Avatar: Fire and Ash' },
+
+  { group: 'Shorts',
+    cat: 'Best Animated Short',       type: 'film',   josh: 'Retirement Plan',                      juan: 'Butterfly' },
+  { cat: 'Best Live-Action Short',    type: 'film',   josh: 'A Friend of Dorothy',                  juan: 'The Singers' },
+  { cat: 'Best Documentary Short',    type: 'film',   josh: 'Children No More: Were and Are Gone',  juan: 'The Devil Is Busy' },
+];
+
+// ── Image sources ───────────────────────────────────────────────────────
+// Try multiple sources in order. First that resolves wins.
+const SOURCES = {
+  // Actors / Directors — Wikipedia article title
+  'Ryan Coogler':        { wiki: 'Ryan Coogler' },
+  'Paul Thomas Anderson':{ wiki: 'Paul Thomas Anderson' },
+  'Jessie Buckley':      { wiki: 'Jessie Buckley' },
+  'Michael B. Jordan':   { wiki: 'Michael B. Jordan' },
+  'Teyana Taylor':       { wiki: 'Teyana Taylor' },
+  'Stellan Skarsgård':   { wiki: 'Stellan Skarsg%C3%A5rd' },
+  'Delroy Lindo':        { wiki: 'Delroy Lindo' },
+
+  // Films — Wikipedia article title
+  'Sinners':             { wiki: 'Sinners_(2025_film)' },
+  'Hamnet':              { wiki: 'Hamnet_(film)' },
+  'One Battle After Another': { wiki: 'One_Battle_After_Another' },
+  'F1':                  { wiki: 'F1_(film)' },
+  'Frankenstein':        { wiki: 'Frankenstein_(2025_film)' },
+  'Train Dreams':        { wiki: 'Train_Dreams_(film)' },
+  'Avatar: Fire and Ash':{ wiki: 'Avatar:_Fire_and_Ash' },
+  'The Voice of Hind Rajab': { wiki: 'The_Voice_of_Hind_Rajab' },
+  'The Secret Agent':    { wiki: 'The_Secret_Agent_(2025_film)' },
+  'KPop Demon Hunters':  { wiki: 'K-Pop_Demon_Hunters' },
+  'Golden':              { wiki: 'Sinners_(2025_film)' },
+};
+
+// ── Image cache ─────────────────────────────────────────────────────────
+const cache = {};
+
+async function fetchWikiThumb(wikiTitle) {
+  try {
+    const r = await fetch(
+      'https://en.wikipedia.org/api/rest_v1/page/summary/' + wikiTitle,
+      { headers: { Accept: 'application/json' } }
+    );
+    if (!r.ok) return null;
+    const d = await r.json();
+    return d.thumbnail?.source ?? null;
+  } catch { return null; }
+}
+
+async function getImageSrc(name) {
+  if (cache[name] !== undefined) return cache[name];
+  cache[name] = null; // prevent double-fetching
+
+  const src = SOURCES[name];
+  if (src?.wiki) {
+    const url = await fetchWikiThumb(src.wiki);
+    if (url) { cache[name] = url; return url; }
+  }
+  return null;
+}
+
+// ── DOM builder helpers ─────────────────────────────────────────────────
+function el(tag, cls) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  return e;
+}
+
+function makeImgWrap(name, type) {
+  const wrap = el('div', 'img-wrap' + (type === 'person' ? ' person' : ''));
+
+  const fb = el('div', 'fallback-letter');
+  fb.textContent = name.charAt(0);
+  wrap.appendChild(fb);
+
+  getImageSrc(name).then(src => {
+    wrap.classList.add('loaded-img'); // kill shimmer
+    if (!src) return;
+    const img = document.createElement('img');
+    img.alt = name;
+    img.loading = 'lazy';
+    img.onload = () => img.classList.add('loaded');
+    img.src = src;
+    fb.style.display = 'none';
+    wrap.appendChild(img);
+  });
+
+  return wrap;
+}
+
+// ── Card builders ───────────────────────────────────────────────────────
+function buildDisagreeCard(item) {
+  const card = el('div', 'card');
+
+  const hdr = el('div', 'card-header');
+  const cat = el('span', 'card-category');
+  cat.textContent = item.cat;
+  hdr.appendChild(cat);
+  card.appendChild(hdr);
+
+  const grid = el('div', 'picks-grid');
+
+  ['josh', 'juan'].forEach(voter => {
+    const name = item[voter];
+    const pick = el('div', 'pick ' + voter);
+
+    pick.appendChild(makeImgWrap(name, item.type));
+
+    const nm = el('div', 'pick-name');
+    nm.textContent = name;
+    pick.appendChild(nm);
+
+    const vt = el('div', 'pick-voter ' + voter);
+    vt.textContent = voter.charAt(0).toUpperCase() + voter.slice(1);
+    pick.appendChild(vt);
+
+    grid.appendChild(pick);
+  });
+
+  card.appendChild(grid);
+  return card;
+}
+
+function buildAgreeCard(item) {
+  const card = el('div', 'card agree');
+
+  const hdr = el('div', 'card-header');
+  const cat = el('span', 'card-category');
+  cat.textContent = item.cat;
+  const badge = el('span', 'agree-badge');
+  badge.textContent = '✓ agree';
+  hdr.appendChild(cat);
+  hdr.appendChild(badge);
+  card.appendChild(hdr);
+
+  const row = el('div', 'agree-row');
+  row.appendChild(makeImgWrap(item.josh, item.type));
+
+  const info = el('div', 'agree-info');
+  const nm = el('div', 'pick-name');
+  nm.textContent = item.josh;
+  info.appendChild(nm);
+
+  const voters = el('div', 'agree-voters');
+  const j = el('span', 'pick-voter josh');
+  j.textContent = 'Josh';
+  const sep = el('span', 'sep');
+  sep.textContent = '·';
+  const n = el('span', 'pick-voter juan');
+  n.textContent = 'Juan';
+  voters.appendChild(j);
+  voters.appendChild(sep);
+  voters.appendChild(n);
+  info.appendChild(voters);
+  row.appendChild(info);
+  card.appendChild(row);
+  return card;
+}
+
+// ── Render ──────────────────────────────────────────────────────────────
+const container = document.getElementById('categories');
+let agrees = 0, differs = 0;
+
+PICKS.forEach(item => {
+  if (item.group) {
+    const lbl = el('div', 'section-label');
+    lbl.textContent = item.group;
+    container.appendChild(lbl);
+  }
+
+  const isAgree = item.josh === item.juan;
+  isAgree ? agrees++ : differs++;
+  container.appendChild(isAgree ? buildAgreeCard(item) : buildDisagreeCard(item));
+});
+
+document.getElementById('agree-count').textContent = agrees;
+document.getElementById('differ-count').textContent = differs;
+</script>
+</body>
+</html>
