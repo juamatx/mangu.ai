@@ -17,7 +17,9 @@
     --white: #f0ece2;
     --gray: #888;
     --dim: #444;
-    --match-green: #2ecc71;
+    --match-green: #b48eff;
+    --oscar-bg: #1a1710;
+    --oscar-border: #c9a84c;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -76,7 +78,7 @@
     margin: 40px auto 0;
     padding: 0 20px 12px;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 12px;
   }
   .col-header {
@@ -87,7 +89,8 @@
   }
   .col-header.josh-h     { color: var(--red);  text-align: left;  }
   .col-header.juan-h     { color: var(--juan); }
-  .col-header.giuseppe-h { color: var(--teal); text-align: right; }
+  .col-header.giuseppe-h { color: var(--teal); }
+  .col-header.oscar-h    { color: var(--oscar-border); text-align: right; }
 
   /* ── CARDS ── */
   .categories {
@@ -126,14 +129,15 @@
   /* ── PICKS ROW ── */
   .picks-row {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 14px;
     align-items: start;
   }
 
   .pick-cell { position: relative; }
   .pick-cell.juan     { text-align: center; }
-  .pick-cell.giuseppe { text-align: right;  }
+  .pick-cell.giuseppe { text-align: center; }
+  .pick-cell.oscar    { text-align: right;  }
 
   /* ── POSTER ── */
   .poster-wrap {
@@ -150,7 +154,8 @@
     justify-content: center;
   }
   .pick-cell.juan     .poster-wrap { margin-left: auto; margin-right: auto; }
-  .pick-cell.giuseppe .poster-wrap { margin-left: auto; }
+  .pick-cell.giuseppe .poster-wrap { margin-left: auto; margin-right: auto; }
+  .pick-cell.oscar    .poster-wrap { margin-left: auto; }
 
   .poster-wrap img {
     width: 100%;
@@ -184,6 +189,39 @@
   .pick-cell.josh     .pick-owner { color: var(--red);  }
   .pick-cell.juan     .pick-owner { color: var(--juan); }
   .pick-cell.giuseppe .pick-owner { color: var(--teal); }
+  .pick-cell.oscar    .pick-owner { color: var(--oscar-border); }
+
+  /* Oscar winner column */
+  .pick-cell.oscar {
+    background: var(--oscar-bg);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 6px;
+    padding: 10px;
+  }
+  .pick-cell.oscar .poster-wrap {
+    box-shadow: 0 0 0 2px var(--oscar-border);
+    margin-left: auto;
+  }
+  .pick-cell.oscar .pick-name {
+    color: var(--oscar-border);
+  }
+  .pick-cell.oscar .pick-owner {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .pick-cell.oscar .pick-owner::before {
+    content: '🏆';
+    font-size: 10px;
+  }
+  .pick-cell.oscar.tbd {
+    opacity: 0.3;
+    border-style: dashed;
+  }
+  .pick-cell.oscar.tbd .pick-name {
+    color: var(--dim);
+    font-style: italic;
+  }
 
   .pick-name {
     font-family: 'Playfair Display', serif;
@@ -192,11 +230,7 @@
     line-height: 1.3;
   }
   .pick-name.matched {
-    text-decoration: underline;
-    text-decoration-color: var(--match-green);
-    text-underline-offset: 4px;
-    text-decoration-thickness: 2px;
-    color: var(--match-green);
+    color: #b48eff;
   }
 
   .vote-pct {
@@ -207,7 +241,7 @@
     margin-top: 3px;
   }
   .pick-name.matched + .vote-pct {
-    color: rgba(46, 204, 113, 0.5);
+    color: rgba(180, 142, 255, 0.5);
   }
 
   /* ── FOOTER ── */
@@ -226,13 +260,14 @@
 
   /* ── MOBILE ── */
   @media (max-width: 640px) {
-    .picks-row { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-    .poster-wrap { max-height: 90px; max-width: 90px; }
-    .pick-name { font-size: 12px; }
-    .pick-owner { font-size: 8px; }
-    .vote-pct { font-size: 8px; }
-    .category-label { font-size: 14px; }
-    .category-card { padding: 14px 12px; }
+    .picks-row { grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6px; }
+    .poster-wrap { max-height: 70px; max-width: 70px; }
+    .pick-name { font-size: 11px; }
+    .pick-owner { font-size: 7px; }
+    .vote-pct { font-size: 7px; }
+    .category-label { font-size: 13px; }
+    .category-card { padding: 12px 10px; }
+    .pick-cell.oscar { padding: 6px; }
   }
 </style>
 </head>
@@ -252,6 +287,7 @@
   <div class="col-header josh-h">Josh</div>
   <div class="col-header juan-h">Juan</div>
   <div class="col-header giuseppe-h">Giuseppe</div>
+  <div class="col-header oscar-h">🏆 Winner</div>
 </div>
 
 <div class="categories" id="categories"></div>
@@ -381,6 +417,11 @@ const picks = [
     giuseppe:  { pick: "The Devil Is Busy",       image: "https://media.vanityfair.com/photos/6980f31ad5b24277eb8f17e5/1:1/w_300", vote: "32%" } },
 ];
 
+// Oscar winners — fill in as announced
+const OSCAR_WINNERS = {
+  // "Best Picture": { pick: "Winner Name", image: "url" },
+};
+
 const container = document.getElementById('categories');
 
 picks.forEach((p, i) => {
@@ -408,6 +449,19 @@ picks.forEach((p, i) => {
     </div>`;
   };
 
+  const winner = OSCAR_WINNERS[p.category];
+  const oscarCell = winner
+    ? `<div class="pick-cell oscar">
+        <div class="poster-wrap">${winner.image ? `<img src="${winner.image}" alt="${winner.pick}" onload="this.classList.add('loaded')">` : `<span class="poster-fallback">🏆</span>`}</div>
+        <span class="pick-owner">Winner</span>
+        <div class="pick-name">${winner.pick}</div>
+      </div>`
+    : `<div class="pick-cell oscar tbd">
+        <div class="poster-wrap"><span class="poster-fallback">?</span></div>
+        <span class="pick-owner">Winner</span>
+        <div class="pick-name">TBD</div>
+      </div>`;
+
   const card = document.createElement('div');
   card.className = 'category-card';
   card.style.animationDelay = `${i * 0.04}s`;
@@ -417,6 +471,7 @@ picks.forEach((p, i) => {
       ${cell('josh',     p.josh,     joshMatch)}
       ${cell('juan',     p.juan,     juanMatch)}
       ${cell('giuseppe', p.giuseppe, giuseppeMatch)}
+      ${oscarCell}
     </div>`;
   container.appendChild(card);
 });
