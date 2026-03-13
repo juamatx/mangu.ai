@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oscar Ballot Showdown — Josh vs Juan vs Giuseppe</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Bebas+Neue&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --card-bg: #111111;
+    --card-hover: #181818;
+    --red: #e63946;
+    --gold: #d4a853;
+    --teal: #4ecdc4;
+    --white: #f0ece2;
+    --gray: #888;
+    --dim: #444;
+    --match-green: #2ecc71;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Source Sans 3', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    padding: 60px 20px 20px;
+  }
+  .header::after {
+    content: '';
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    height: 2px;
+    background: var(--red);
+    margin: 30px auto 0;
+  }
+  .header-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 6px;
+    color: var(--red);
+    margin-bottom: 10px;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 900;
+    letter-spacing: -1px;
+    line-height: 1.15;
+    margin-bottom: 6px;
+  }
+  .header h1 .josh     { color: var(--red);  }
+  .header h1 .juan     { color: var(--gold); }
+  .header h1 .giuseppe { color: var(--teal); }
+  .header h1 .vs       { color: var(--dim); font-weight: 400; font-style: italic; font-size: 0.6em; }
+  .header .subtitle {
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--gray);
+    letter-spacing: 1px;
+  }
+
+  /* ── COLUMN HEADERS ── */
+  .col-headers {
+    max-width: 960px;
+    margin: 40px auto 0;
+    padding: 0 20px 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  .col-header {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 4px;
+    text-align: center;
+  }
+  .col-header.josh-h     { color: var(--red);  text-align: left;  }
+  .col-header.juan-h     { color: var(--gold); }
+  .col-header.giuseppe-h { color: var(--teal); text-align: right; }
+
+  /* ── CARDS ── */
+  .categories {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  .category-card {
+    background: var(--card-bg);
+    border-left: 3px solid transparent;
+    margin-bottom: 2px;
+    padding: 20px 24px 18px;
+    transition: background 0.25s, border-left-color 0.25s;
+    opacity: 0;
+    animation: fadeUp 0.4s ease forwards;
+  }
+  .category-card:hover {
+    background: var(--card-hover);
+    border-left-color: var(--red);
+  }
+
+  /* ── CATEGORY LABEL ── */
+  .category-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 17px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--white);
+    opacity: 0.7;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #222;
+    margin-bottom: 16px;
+  }
+
+  /* ── PICKS ROW ── */
+  .picks-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+
+  .pick-cell { position: relative; }
+  .pick-cell.juan     { text-align: center; }
+  .pick-cell.giuseppe { text-align: right;  }
+
+  /* ── POSTER ── */
+  .poster-wrap {
+    width: 100%;
+    aspect-ratio: 1/1;
+    max-height: 120px;
+    max-width: 120px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    overflow: hidden;
+    background: #1c1c1c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pick-cell.juan     .poster-wrap { margin-left: auto; margin-right: auto; }
+  .pick-cell.giuseppe .poster-wrap { margin-left: auto; }
+
+  .poster-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .poster-wrap img.loaded { opacity: 1; }
+
+  .poster-fallback {
+    font-size: 28px;
+    color: var(--dim);
+  }
+
+  /* green glow on matched poster */
+  .poster-wrap.matched-poster {
+    box-shadow: 0 0 0 2px var(--match-green);
+  }
+
+  /* ── PICK TEXT ── */
+  .pick-owner {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .pick-cell.josh     .pick-owner { color: var(--red);  }
+  .pick-cell.juan     .pick-owner { color: var(--gold); }
+  .pick-cell.giuseppe .pick-owner { color: var(--teal); }
+
+  .pick-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  .pick-name.matched {
+    text-decoration: underline;
+    text-decoration-color: var(--match-green);
+    text-underline-offset: 4px;
+    text-decoration-thickness: 2px;
+    color: var(--match-green);
+  }
+
+  .vote-pct {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--dim);
+    margin-top: 3px;
+  }
+  .pick-name.matched + .vote-pct {
+    color: rgba(46, 204, 113, 0.5);
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    padding: 40px 20px 60px;
+    font-size: 12px;
+    color: var(--dim);
+    letter-spacing: 2px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0);    }
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    .picks-row { grid-template-columns: 1fr; gap: 14px; }
+    .pick-cell, .pick-cell.juan, .pick-cell.giuseppe { text-align: left; }
+    .pick-cell { padding-left: 14px; border-left: 2px solid transparent; }
+    .pick-cell.josh     { border-left-color: var(--red);  }
+    .pick-cell.juan     { border-left-color: var(--gold); }
+    .pick-cell.giuseppe { border-left-color: var(--teal); }
+    .pick-cell.juan .poster-wrap,
+    .pick-cell.giuseppe .poster-wrap { margin-left: 0; margin-right: auto; }
+    .col-headers { display: none; }
+    .poster-wrap { max-height: 90px; max-width: 90px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-label">98th Academy Awards Ballot</div>
+  <h1>
+    <span class="josh">Josh</span> <span class="vs">vs</span>
+    <span class="juan">Juan</span> <span class="vs">vs</span>
+    <span class="giuseppe">Giuseppe</span>
+  </h1>
+  <div class="subtitle">Every pick. Every category. Who called it?</div>
+</div>
+
+<div class="col-headers">
+  <div class="col-header josh-h">Josh</div>
+  <div class="col-header juan-h">Juan</div>
+  <div class="col-header giuseppe-h">Giuseppe</div>
+</div>
+
+<div class="categories" id="categories"></div>
+
+<div class="footer">VANITY FAIR OSCAR BALLOT COMPARISON · 2026</div>
+
+<script>
+const picks = [
+  { category: "Best Picture",
+    josh:      { pick: "Hamnet",                 image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "5%" },
+    juan:      { pick: "One Battle After Another",image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "41%" },
+    giuseppe:  { pick: "Frankenstein",            image: "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300", vote: "3%" } },
+
+  { category: "Best Director",
+    josh:      { pick: "Ryan Coogler",            image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "32%" },
+    juan:      { pick: "Paul Thomas Anderson",    image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "55%" },
+    giuseppe:  { pick: "Paul Thomas Anderson",    image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "55%" } },
+
+  { category: "Best Actress",
+    josh:      { pick: "Jessie Buckley",          image: "https://media.vanityfair.com/photos/68a621e9fd15f61246dbb26d/1:1/w_300", vote: "73%" },
+    juan:      { pick: "Jessie Buckley",          image: "https://media.vanityfair.com/photos/68a621e9fd15f61246dbb26d/1:1/w_300", vote: "73%" },
+    giuseppe:  { pick: "Jessie Buckley",          image: "https://media.vanityfair.com/photos/68a621e9fd15f61246dbb26d/1:1/w_300", vote: "73%" } },
+
+  { category: "Best Actor",
+    josh:      { pick: "Michael B. Jordan",       image: "https://media.vanityfair.com/photos/6980e128825f8d54ff81329b/1:1/w_300", vote: "56%" },
+    juan:      { pick: "Michael B. Jordan",       image: "https://media.vanityfair.com/photos/6980e128825f8d54ff81329b/1:1/w_300", vote: "56%" },
+    giuseppe:  { pick: "Timothée Chalamet",       image: "https://media.vanityfair.com/photos/69694039fea64349533e2a0d/1:1/w_300", vote: "26%" } },
+
+  { category: "Best Supporting Actress",
+    josh:      { pick: "Teyana Taylor",           image: "https://media.vanityfair.com/photos/69459ca03540978087923900/1:1/w_300", vote: "23%" },
+    juan:      { pick: "Teyana Taylor",           image: "https://media.vanityfair.com/photos/69459ca03540978087923900/1:1/w_300", vote: "23%" },
+    giuseppe:  { pick: "Teyana Taylor",           image: "https://media.vanityfair.com/photos/69459ca03540978087923900/1:1/w_300", vote: "23%" } },
+
+  { category: "Best Supporting Actor",
+    josh:      { pick: "Stellan Skarsgård",       image: "https://media.vanityfair.com/photos/6980e826c319510dba722560/1:1/w_300", vote: "16%" },
+    juan:      { pick: "Delroy Lindo",            image: "https://media.vanityfair.com/photos/6980e7b646b86b2fb3c36e56/1:1/w_300", vote: "17%" },
+    giuseppe:  { pick: "Jacob Elordi",            image: "https://media.vanityfair.com/photos/6980f246a9f54c8d7bb1079a/1:1/w_300", vote: "12%" } },
+
+  { category: "Best Original Screenplay",
+    josh:      { pick: "Sinners",                 image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "76%" },
+    juan:      { pick: "Sinners",                 image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "76%" },
+    giuseppe:  { pick: "Sinners",                 image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "76%" } },
+
+  { category: "Best Adapted Screenplay",
+    josh:      { pick: "Hamnet",                  image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "19%" },
+    juan:      { pick: "Hamnet",                  image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "19%" },
+    giuseppe:  { pick: "Hamnet",                  image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "19%" } },
+
+  { category: "Best International Feature",
+    josh:      { pick: "The Voice of Hind Rajab", image: "https://media.vanityfair.com/photos/698383378d2faca3ac9c2c8e/1:1/w_300", vote: "4%" },
+    juan:      { pick: "The Secret Agent",        image: "https://media.vanityfair.com/photos/682107888fbed777b44552af/1:1/w_300", vote: "27%" },
+    giuseppe:  { pick: "It Was Just an Accident", image: "https://media.vanityfair.com/photos/6984b89f90beed24b7dab9f9/1:1/w_300", vote: "8%" } },
+
+  { category: "Best Animated Feature",
+    josh:      { pick: "KPop Demon Hunters",                        image: "https://media.vanityfair.com/photos/68d3f4dd47f4cdba33dfbccf/1:1/w_300", vote: "76%" },
+    juan:      { pick: "Little Amélie or the Character of Rain",    image: "https://media.vanityfair.com/photos/6984cc7c90beed24b7dabbef/1:1/w_300", vote: "4%" },
+    giuseppe:  { pick: "KPop Demon Hunters",                        image: "https://media.vanityfair.com/photos/68d3f4dd47f4cdba33dfbccf/1:1/w_300", vote: "76%" } },
+
+  { category: "Best Documentary Feature",
+    josh:      { pick: "The Perfect Neighbor",            image: "https://media.vanityfair.com/photos/6984cc7cfeed93e5e4f1fc8f/1:1/w_300", vote: "56%" },
+    juan:      { pick: "Come See Me in the Good Light",   image: "https://media.vanityfair.com/photos/6984cc7e282cb3b32361892c/1:1/w_300", vote: "10%" },
+    giuseppe:  { pick: "Come See Me in the Good Light",   image: "https://media.vanityfair.com/photos/6984cc7e282cb3b32361892c/1:1/w_300", vote: "10%" } },
+
+  { category: "Best Original Score",
+    josh:      { pick: "Frankenstein",            image: "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300", vote: "4%" },
+    juan:      { pick: "Sinners",                 image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "79%" },
+    giuseppe:  { pick: "Hamnet",                  image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "5%" } },
+
+  { category: "Best Original Song",
+    josh:      { pick: "Golden",                  image: "https://media.vanityfair.com/photos/68d3f4dd47f4cdba33dfbccf/1:1/w_300", vote: "62%" },
+    juan:      { pick: "Golden",                  image: "https://media.vanityfair.com/photos/68d3f4dd47f4cdba33dfbccf/1:1/w_300", vote: "62%" },
+    giuseppe:  { pick: "Dear Me",                 image: "https://media.vanityfair.com/photos/6984cc7b282cb3b32361891f/1:1/w_300", vote: "1%" } },
+
+  { category: "Best Cinematography",
+    josh:      { pick: "Train Dreams",            image: "https://media.vanityfair.com/photos/695c14784d16d8b8bf106334/1:1/w_300", vote: "17%" },
+    juan:      { pick: "Train Dreams",            image: "https://media.vanityfair.com/photos/695c14784d16d8b8bf106334/1:1/w_300", vote: "17%" },
+    giuseppe:  { pick: "One Battle After Another",image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "26%" } },
+
+  { category: "Best Costume Design",
+    josh:      { pick: "Frankenstein",            image: "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300", vote: "65%" },
+    juan:      { pick: "Frankenstein",            image: "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300", vote: "65%" },
+    giuseppe:  { pick: "Frankenstein",            image: "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300", vote: "65%" } },
+
+  { category: "Best Film Editing",
+    josh:      { pick: "F1",                      image: "https://media.vanityfair.com/photos/6980f109656834c976707272/1:1/w_300", vote: "15%" },
+    juan:      { pick: "F1",                      image: "https://media.vanityfair.com/photos/6980f109656834c976707272/1:1/w_300", vote: "15%" },
+    giuseppe:  { pick: "Marty Supreme",           image: "https://media.vanityfair.com/photos/6924c994ed07f0d4cdeccc85/1:1/w_300", vote: "10%" } },
+
+  { category: "Best Casting",
+    josh:      { pick: "One Battle After Another",image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "14%" },
+    juan:      { pick: "One Battle After Another",image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "14%" },
+    giuseppe:  { pick: "Hamnet",                  image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "5%" } },
+
+  { category: "Best Makeup and Hairstyling",
+    josh:      { pick: "Frankenstein",            image: "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300", vote: "81%" },
+    juan:      { pick: "Frankenstein",            image: "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300", vote: "81%" },
+    giuseppe:  { pick: "Frankenstein",            image: "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300", vote: "81%" } },
+
+  { category: "Best Production Design",
+    josh:      { pick: "Sinners",                 image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "27%" },
+    juan:      { pick: "One Battle After Another",image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "4%" },
+    giuseppe:  { pick: "Marty Supreme",           image: "https://media.vanityfair.com/photos/6924c994ed07f0d4cdeccc85/1:1/w_300", vote: "8%" } },
+
+  { category: "Best Sound",
+    josh:      { pick: "F1",                      image: "https://media.vanityfair.com/photos/6980f109656834c976707272/1:1/w_300", vote: "54%" },
+    juan:      { pick: "F1",                      image: "https://media.vanityfair.com/photos/6980f109656834c976707272/1:1/w_300", vote: "54%" },
+    giuseppe:  { pick: "F1",                      image: "https://media.vanityfair.com/photos/6980f109656834c976707272/1:1/w_300", vote: "54%" } },
+
+  { category: "Best Visual Effects",
+    josh:      { pick: "Avatar: Fire and Ash",    image: "https://media.vanityfair.com/photos/6984cc7e530004d8e8c621c0/1:1/w_300", vote: "70%" },
+    juan:      { pick: "Avatar: Fire and Ash",    image: "https://media.vanityfair.com/photos/6984cc7e530004d8e8c621c0/1:1/w_300", vote: "70%" },
+    giuseppe:  { pick: "Avatar: Fire and Ash",    image: "https://media.vanityfair.com/photos/6984cc7e530004d8e8c621c0/1:1/w_300", vote: "70%" } },
+
+  { category: "Best Animated Short",
+    josh:      { pick: "Retirement Plan",         image: "https://media.vanityfair.com/photos/6980eafa86ee5cbe43a66203/1:1/w_300", vote: "11%" },
+    juan:      { pick: "Butterfly",               image: "https://media.vanityfair.com/photos/6980de19fbf90a75f410420e/1:1/w_300", vote: "21%" },
+    giuseppe:  { pick: "The Girl Who Cried Pearls",image:"https://media.vanityfair.com/photos/6980ea9fa9f54c8d7bb10792/1:1/w_300", vote: "44%" } },
+
+  { category: "Best Live-Action Short",
+    josh:      { pick: "A Friend of Dorothy",     image: "https://media.vanityfair.com/photos/6984d426282cb3b3236189f1/1:1/w_300", vote: "51%" },
+    juan:      { pick: "The Singers",             image: "https://media.vanityfair.com/photos/6984d5db05a9a1ff7ceb676a/1:1/w_300", vote: "12%" },
+    giuseppe:  { pick: "Butcher's Stain",         image: "https://media.vanityfair.com/photos/6984d30f8ef616bb843a827d/1:1/w_300", vote: "7%" } },
+
+  { category: "Best Documentary Short",
+    josh:      { pick: 'Children No More: "Were and Are Gone"', image: "https://media.vanityfair.com/photos/6980f2c7644e18dcf873de3d/1:1/w_300", vote: "17%" },
+    juan:      { pick: "The Devil Is Busy",       image: "https://media.vanityfair.com/photos/6980f31ad5b24277eb8f17e5/1:1/w_300", vote: "32%" },
+    giuseppe:  { pick: "The Devil Is Busy",       image: "https://media.vanityfair.com/photos/6980f31ad5b24277eb8f17e5/1:1/w_300", vote: "32%" } },
+];
+
+const container = document.getElementById('categories');
+
+picks.forEach((p, i) => {
+  const jj = p.josh.pick && p.juan.pick     && p.josh.pick === p.juan.pick;
+  const jg = p.josh.pick && p.giuseppe.pick && p.josh.pick === p.giuseppe.pick;
+  const ug = p.juan.pick && p.giuseppe.pick && p.juan.pick === p.giuseppe.pick;
+
+  const joshMatch     = jj || jg;
+  const juanMatch     = jj || ug;
+  const giuseppeMatch = jg || ug;
+
+  const cell = (person, data, isMatch) => {
+    const pc = isMatch ? ' matched-poster' : '';
+    const nc = isMatch ? ' matched' : '';
+    const src = data.image ? data.image.replace('/w_300', '/w_500') : '';
+    const img = src
+      ? `<img src="${src}" alt="${data.pick}" onload="this.classList.add('loaded')">`
+      : `<span class="poster-fallback">🎬</span>`;
+
+    return `<div class="pick-cell ${person}">
+      <div class="poster-wrap${pc}">${img}</div>
+      <span class="pick-owner">${person.charAt(0).toUpperCase() + person.slice(1)}</span>
+      <div class="pick-name${nc}">${data.pick}</div>
+      <span class="vote-pct">${data.vote} of critics agree</span>
+    </div>`;
+  };
+
+  const card = document.createElement('div');
+  card.className = 'category-card';
+  card.style.animationDelay = `${i * 0.04}s`;
+  card.innerHTML = `
+    <div class="category-label">${p.category}</div>
+    <div class="picks-row">
+      ${cell('josh',     p.josh,     joshMatch)}
+      ${cell('juan',     p.juan,     juanMatch)}
+      ${cell('giuseppe', p.giuseppe, giuseppeMatch)}
+    </div>`;
+  container.appendChild(card);
+});
+</script>
+
+</body>
+</html>
