@@ -10,8 +10,9 @@
     --bg: #0a0a0a;
     --card-bg: #111111;
     --card-hover: #181818;
-    --red: #e63946;
-    --gold: #d4a853;
+    --red: #6c8cff;
+    --gold: #f0a500;
+    --juan: #e05297;
     --teal: #4ecdc4;
     --white: #f0ece2;
     --gray: #888;
@@ -40,14 +41,14 @@
     width: 80%;
     max-width: 700px;
     height: 2px;
-    background: var(--red);
+    background: var(--gold);
     margin: 30px auto 0;
   }
   .header-label {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 14px;
     letter-spacing: 6px;
-    color: var(--red);
+    color: var(--gold);
     margin-bottom: 10px;
   }
   .header h1 {
@@ -59,7 +60,7 @@
     margin-bottom: 6px;
   }
   .header h1 .josh     { color: var(--red);  }
-  .header h1 .juan     { color: var(--gold); }
+  .header h1 .juan     { color: var(--juan); }
   .header h1 .giuseppe { color: var(--teal); }
   .header h1 .vs       { color: var(--dim); font-weight: 400; font-style: italic; font-size: 0.6em; }
   .header .subtitle {
@@ -85,7 +86,7 @@
     text-align: center;
   }
   .col-header.josh-h     { color: var(--red);  text-align: left;  }
-  .col-header.juan-h     { color: var(--gold); }
+  .col-header.juan-h     { color: var(--juan); }
   .col-header.giuseppe-h { color: var(--teal); text-align: right; }
 
   /* ── CARDS ── */
@@ -181,7 +182,7 @@
     margin-bottom: 2px;
   }
   .pick-cell.josh     .pick-owner { color: var(--red);  }
-  .pick-cell.juan     .pick-owner { color: var(--gold); }
+  .pick-cell.juan     .pick-owner { color: var(--juan); }
   .pick-cell.giuseppe .pick-owner { color: var(--teal); }
 
   .pick-name {
@@ -225,16 +226,13 @@
 
   /* ── MOBILE ── */
   @media (max-width: 640px) {
-    .picks-row { grid-template-columns: 1fr; gap: 14px; }
-    .pick-cell, .pick-cell.juan, .pick-cell.giuseppe { text-align: left; }
-    .pick-cell { padding-left: 14px; border-left: 2px solid transparent; }
-    .pick-cell.josh     { border-left-color: var(--red);  }
-    .pick-cell.juan     { border-left-color: var(--gold); }
-    .pick-cell.giuseppe { border-left-color: var(--teal); }
-    .pick-cell.juan .poster-wrap,
-    .pick-cell.giuseppe .poster-wrap { margin-left: 0; margin-right: auto; }
-    .col-headers { display: none; }
+    .picks-row { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
     .poster-wrap { max-height: 90px; max-width: 90px; }
+    .pick-name { font-size: 12px; }
+    .pick-owner { font-size: 8px; }
+    .vote-pct { font-size: 8px; }
+    .category-label { font-size: 14px; }
+    .category-card { padding: 14px 12px; }
   }
 </style>
 </head>
