@@ -476,9 +476,9 @@ picks.forEach((p, i) => {
 
   const oscarCell = hasWinner
     ? `<div class="pick-cell oscar">
-        <div class="poster-wrap">${winner.image ? `<img src="${winner.image}" alt="${winner.pick}" onload="this.classList.add('loaded')">` : `<span class="poster-fallback">🏆</span>`}</div>
+        <div class="poster-wrap">${winner.image ? `<img src="${winner.image}" alt="${winner.display || winner.pick}" onload="this.classList.add('loaded')">` : `<span class="poster-fallback">🏆</span>`}</div>
         <span class="pick-owner">Winner</span>
-        <div class="pick-name">${winner.pick}</div>
+        <div class="pick-name">${winner.display || winner.pick}</div>
       </div>`
     : `<div class="pick-cell oscar tbd">
         <div class="poster-wrap"><span class="poster-fallback">?</span></div>

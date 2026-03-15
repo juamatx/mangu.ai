@@ -430,7 +430,8 @@ const picks = [
 
 // Oscar winners — fill in as announced
 const OSCAR_WINNERS = {
-  'Best Supporting Actress': { pick: 'Amy Madigan', film: 'Weapons', image: 'https://media.vanityfair.com/photos/6980e5b5656834c97670723c/1:1/w_300' },
+  'Best Supporting Actress': { pick: 'Amy Madigan', film: 'Weapons', display: 'Amy Madigan', image: 'https://media.vanityfair.com/photos/6980e5b5656834c97670723c/1:1/w_300' },
+  'Best Animated Feature': { pick: 'KPop Demon Hunters', film: 'KPop Demon Hunters', display: 'KPop Demon Hunters', image: 'https://media.vanityfair.com/photos/68d3f4dd47f4cdba33dfbccf/1:1/w_300' },
 };
 
 const container = document.getElementById('categories');
@@ -476,9 +477,9 @@ picks.forEach((p, i) => {
 
   const oscarCell = hasWinner
     ? `<div class="pick-cell oscar">
-        <div class="poster-wrap">${winner.image ? `<img src="${winner.image}" alt="${winner.pick}" onload="this.classList.add('loaded')">` : `<span class="poster-fallback">🏆</span>`}</div>
+        <div class="poster-wrap">${winner.image ? `<img src="${winner.image}" alt="${winner.display || winner.pick}" onload="this.classList.add('loaded')">` : `<span class="poster-fallback">🏆</span>`}</div>
         <span class="pick-owner">Winner</span>
-        <div class="pick-name">${winner.pick}</div>
+        <div class="pick-name">${winner.display || winner.pick}</div>
       </div>`
     : `<div class="pick-cell oscar tbd">
         <div class="poster-wrap"><span class="poster-fallback">?</span></div>

@@ -89,7 +89,11 @@ def rebuild_html(winners):
         safe_pick = data["nominee"].replace("'", "\\'")
         safe_film = data["film"].replace("'", "\\'")
         img = data["image"]
-        lines.append(f"  '{safe_cat}': {{ pick: '{safe_pick}', film: '{safe_film}', image: '{img}' }},")
+        # For acting/directing categories, display the person name; for others, display the film
+        person_cats = {"Best Actor", "Best Actress", "Best Supporting Actor",
+                       "Best Supporting Actress", "Best Director"}
+        display = safe_pick if cat in person_cats else safe_film
+        lines.append(f"  '{safe_cat}': {{ pick: '{safe_pick}', film: '{safe_film}', display: '{display}', image: '{img}' }},")
 
     js_obj = "{\n" + "\n".join(lines) + "\n}" if lines else "{}"
 

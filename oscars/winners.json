@@ -4,5 +4,11 @@
     "film": "Weapons",
     "vote": "40%",
     "image": "https://media.vanityfair.com/photos/6980e5b5656834c97670723c/1:1/w_300"
+  },
+  "Best Animated Feature": {
+    "nominee": "KPop Demon Hunters",
+    "film": "KPop Demon Hunters",
+    "vote": "76%",
+    "image": "https://media.vanityfair.com/photos/68d3f4dd47f4cdba33dfbccf/1:1/w_300"
   }
 }
