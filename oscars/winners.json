@@ -22,5 +22,11 @@
     "film": "Frankenstein",
     "vote": "65%",
     "image": "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300"
+  },
+  "Best Makeup and Hairstyling": {
+    "nominee": "Mike Hill et al.",
+    "film": "Frankenstein",
+    "vote": "81%",
+    "image": "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300"
   }
 }
