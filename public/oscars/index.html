@@ -307,15 +307,15 @@
 
 <script>
 const picks = [
-  { category: "Best Documentary Short",
-    josh:      { pick: 'Children No More: "Were and Are Gone"', image: "https://media.vanityfair.com/photos/6980f2c7644e18dcf873de3d/1:1/w_300", vote: "17%" },
-    juan:      { pick: "The Devil Is Busy",       image: "https://media.vanityfair.com/photos/6980f31ad5b24277eb8f17e5/1:1/w_300", vote: "32%" },
-    giuseppe:  { pick: "The Devil Is Busy",       image: "https://media.vanityfair.com/photos/6980f31ad5b24277eb8f17e5/1:1/w_300", vote: "32%" } },
+  { category: "Best Supporting Actress",
+    josh:      { pick: "Teyana Taylor",           image: "https://media.vanityfair.com/photos/69459ca03540978087923900/1:1/w_300", vote: "23%" },
+    juan:      { pick: "Teyana Taylor",           image: "https://media.vanityfair.com/photos/69459ca03540978087923900/1:1/w_300", vote: "23%" },
+    giuseppe:  { pick: "Teyana Taylor",           image: "https://media.vanityfair.com/photos/69459ca03540978087923900/1:1/w_300", vote: "23%" } },
 
-  { category: "Best Live-Action Short",
-    josh:      { pick: "A Friend of Dorothy",     image: "https://media.vanityfair.com/photos/6984d426282cb3b3236189f1/1:1/w_300", vote: "51%" },
-    juan:      { pick: "The Singers",             image: "https://media.vanityfair.com/photos/6984d5db05a9a1ff7ceb676a/1:1/w_300", vote: "12%" },
-    giuseppe:  { pick: "Butcher's Stain",         image: "https://media.vanityfair.com/photos/6984d30f8ef616bb843a827d/1:1/w_300", vote: "7%" } },
+  { category: "Best Animated Feature",
+    josh:      { pick: "KPop Demon Hunters",                        image: "https://media.vanityfair.com/photos/68d3f4dd47f4cdba33dfbccf/1:1/w_300", vote: "76%" },
+    juan:      { pick: "Little Amélie or the Character of Rain",    image: "https://media.vanityfair.com/photos/6984cc7c90beed24b7dabbef/1:1/w_300", vote: "4%" },
+    giuseppe:  { pick: "KPop Demon Hunters",                        image: "https://media.vanityfair.com/photos/68d3f4dd47f4cdba33dfbccf/1:1/w_300", vote: "76%" } },
 
   { category: "Best Animated Short",
     josh:      { pick: "Retirement Plan",         image: "https://media.vanityfair.com/photos/6980eafa86ee5cbe43a66203/1:1/w_300", vote: "11%" },
@@ -332,6 +332,56 @@ const picks = [
     juan:      { pick: "Frankenstein",            image: "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300", vote: "81%" },
     giuseppe:  { pick: "Frankenstein",            image: "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300", vote: "81%" } },
 
+  { category: "Best Casting",
+    josh:      { pick: "One Battle After Another",image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "14%" },
+    juan:      { pick: "One Battle After Another",image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "14%" },
+    giuseppe:  { pick: "Hamnet",                  image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "5%" } },
+
+  { category: "Best Live-Action Short",
+    josh:      { pick: "A Friend of Dorothy",     image: "https://media.vanityfair.com/photos/6984d426282cb3b3236189f1/1:1/w_300", vote: "51%" },
+    juan:      { pick: "The Singers",             image: "https://media.vanityfair.com/photos/6984d5db05a9a1ff7ceb676a/1:1/w_300", vote: "12%" },
+    giuseppe:  { pick: "Butcher's Stain",         image: "https://media.vanityfair.com/photos/6984d30f8ef616bb843a827d/1:1/w_300", vote: "7%" } },
+
+  { category: "Best Supporting Actor",
+    josh:      { pick: "Stellan Skarsgård",       image: "https://media.vanityfair.com/photos/6980e826c319510dba722560/1:1/w_300", vote: "16%" },
+    juan:      { pick: "Delroy Lindo",            image: "https://media.vanityfair.com/photos/6980e7b646b86b2fb3c36e56/1:1/w_300", vote: "17%" },
+    giuseppe:  { pick: "Jacob Elordi",            image: "https://media.vanityfair.com/photos/6980f246a9f54c8d7bb1079a/1:1/w_300", vote: "12%" } },
+
+  { category: "Best Adapted Screenplay",
+    josh:      { pick: "Hamnet",                  image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "19%" },
+    juan:      { pick: "Hamnet",                  image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "19%" },
+    giuseppe:  { pick: "Hamnet",                  image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "19%" } },
+
+  { category: "Best Original Screenplay",
+    josh:      { pick: "Sinners",                 image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "76%" },
+    juan:      { pick: "Sinners",                 image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "76%" },
+    giuseppe:  { pick: "Sinners",                 image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "76%" } },
+
+  { category: "Best Production Design",
+    josh:      { pick: "Sinners",                 image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "27%" },
+    juan:      { pick: "One Battle After Another",image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "4%" },
+    giuseppe:  { pick: "Marty Supreme",           image: "https://media.vanityfair.com/photos/6924c994ed07f0d4cdeccc85/1:1/w_300", vote: "8%" } },
+
+  { category: "Best Visual Effects",
+    josh:      { pick: "Avatar: Fire and Ash",    image: "https://media.vanityfair.com/photos/6984cc7e530004d8e8c621c0/1:1/w_300", vote: "70%" },
+    juan:      { pick: "Avatar: Fire and Ash",    image: "https://media.vanityfair.com/photos/6984cc7e530004d8e8c621c0/1:1/w_300", vote: "70%" },
+    giuseppe:  { pick: "Avatar: Fire and Ash",    image: "https://media.vanityfair.com/photos/6984cc7e530004d8e8c621c0/1:1/w_300", vote: "70%" } },
+
+  { category: "Best Documentary Short",
+    josh:      { pick: 'Children No More: "Were and Are Gone"', image: "https://media.vanityfair.com/photos/6980f2c7644e18dcf873de3d/1:1/w_300", vote: "17%" },
+    juan:      { pick: "The Devil Is Busy",       image: "https://media.vanityfair.com/photos/6980f31ad5b24277eb8f17e5/1:1/w_300", vote: "32%" },
+    giuseppe:  { pick: "The Devil Is Busy",       image: "https://media.vanityfair.com/photos/6980f31ad5b24277eb8f17e5/1:1/w_300", vote: "32%" } },
+
+  { category: "Best Documentary Feature",
+    josh:      { pick: "The Perfect Neighbor",            image: "https://media.vanityfair.com/photos/6984cc7cfeed93e5e4f1fc8f/1:1/w_300", vote: "56%" },
+    juan:      { pick: "Come See Me in the Good Light",   image: "https://media.vanityfair.com/photos/6984cc7e282cb3b32361892c/1:1/w_300", vote: "10%" },
+    giuseppe:  { pick: "Come See Me in the Good Light",   image: "https://media.vanityfair.com/photos/6984cc7e282cb3b32361892c/1:1/w_300", vote: "10%" } },
+
+  { category: "Best Original Score",
+    josh:      { pick: "Frankenstein",            image: "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300", vote: "4%" },
+    juan:      { pick: "Sinners",                 image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "79%" },
+    giuseppe:  { pick: "Hamnet",                  image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "5%" } },
+
   { category: "Best Sound",
     josh:      { pick: "F1",                      image: "https://media.vanityfair.com/photos/6980f109656834c976707272/1:1/w_300", vote: "54%" },
     juan:      { pick: "F1",                      image: "https://media.vanityfair.com/photos/6980f109656834c976707272/1:1/w_300", vote: "54%" },
@@ -342,85 +392,35 @@ const picks = [
     juan:      { pick: "F1",                      image: "https://media.vanityfair.com/photos/6980f109656834c976707272/1:1/w_300", vote: "15%" },
     giuseppe:  { pick: "Marty Supreme",           image: "https://media.vanityfair.com/photos/6924c994ed07f0d4cdeccc85/1:1/w_300", vote: "10%" } },
 
-  { category: "Best Visual Effects",
-    josh:      { pick: "Avatar: Fire and Ash",    image: "https://media.vanityfair.com/photos/6984cc7e530004d8e8c621c0/1:1/w_300", vote: "70%" },
-    juan:      { pick: "Avatar: Fire and Ash",    image: "https://media.vanityfair.com/photos/6984cc7e530004d8e8c621c0/1:1/w_300", vote: "70%" },
-    giuseppe:  { pick: "Avatar: Fire and Ash",    image: "https://media.vanityfair.com/photos/6984cc7e530004d8e8c621c0/1:1/w_300", vote: "70%" } },
-
-  { category: "Best Production Design",
-    josh:      { pick: "Sinners",                 image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "27%" },
-    juan:      { pick: "One Battle After Another",image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "4%" },
-    giuseppe:  { pick: "Marty Supreme",           image: "https://media.vanityfair.com/photos/6924c994ed07f0d4cdeccc85/1:1/w_300", vote: "8%" } },
-
-  { category: "Best Casting",
-    josh:      { pick: "One Battle After Another",image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "14%" },
-    juan:      { pick: "One Battle After Another",image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "14%" },
-    giuseppe:  { pick: "Hamnet",                  image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "5%" } },
-
   { category: "Best Cinematography",
     josh:      { pick: "Train Dreams",            image: "https://media.vanityfair.com/photos/695c14784d16d8b8bf106334/1:1/w_300", vote: "17%" },
     juan:      { pick: "Train Dreams",            image: "https://media.vanityfair.com/photos/695c14784d16d8b8bf106334/1:1/w_300", vote: "17%" },
     giuseppe:  { pick: "One Battle After Another",image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "26%" } },
-
-  { category: "Best Original Score",
-    josh:      { pick: "Frankenstein",            image: "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300", vote: "4%" },
-    juan:      { pick: "Sinners",                 image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "79%" },
-    giuseppe:  { pick: "Hamnet",                  image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "5%" } },
-
-  { category: "Best Original Song",
-    josh:      { pick: "Golden",                  image: "https://media.vanityfair.com/photos/68d3f4dd47f4cdba33dfbccf/1:1/w_300", vote: "62%" },
-    juan:      { pick: "Golden",                  image: "https://media.vanityfair.com/photos/68d3f4dd47f4cdba33dfbccf/1:1/w_300", vote: "62%" },
-    giuseppe:  { pick: "Dear Me",                 image: "https://media.vanityfair.com/photos/6984cc7b282cb3b32361891f/1:1/w_300", vote: "1%" } },
-
-  { category: "Best Documentary Feature",
-    josh:      { pick: "The Perfect Neighbor",            image: "https://media.vanityfair.com/photos/6984cc7cfeed93e5e4f1fc8f/1:1/w_300", vote: "56%" },
-    juan:      { pick: "Come See Me in the Good Light",   image: "https://media.vanityfair.com/photos/6984cc7e282cb3b32361892c/1:1/w_300", vote: "10%" },
-    giuseppe:  { pick: "Come See Me in the Good Light",   image: "https://media.vanityfair.com/photos/6984cc7e282cb3b32361892c/1:1/w_300", vote: "10%" } },
 
   { category: "Best International Feature",
     josh:      { pick: "The Voice of Hind Rajab", image: "https://media.vanityfair.com/photos/698383378d2faca3ac9c2c8e/1:1/w_300", vote: "4%" },
     juan:      { pick: "The Secret Agent",        image: "https://media.vanityfair.com/photos/682107888fbed777b44552af/1:1/w_300", vote: "27%" },
     giuseppe:  { pick: "It Was Just an Accident", image: "https://media.vanityfair.com/photos/6984b89f90beed24b7dab9f9/1:1/w_300", vote: "8%" } },
 
-  { category: "Best Animated Feature",
-    josh:      { pick: "KPop Demon Hunters",                        image: "https://media.vanityfair.com/photos/68d3f4dd47f4cdba33dfbccf/1:1/w_300", vote: "76%" },
-    juan:      { pick: "Little Amélie or the Character of Rain",    image: "https://media.vanityfair.com/photos/6984cc7c90beed24b7dabbef/1:1/w_300", vote: "4%" },
-    giuseppe:  { pick: "KPop Demon Hunters",                        image: "https://media.vanityfair.com/photos/68d3f4dd47f4cdba33dfbccf/1:1/w_300", vote: "76%" } },
+  { category: "Best Original Song",
+    josh:      { pick: "Golden",                  image: "https://media.vanityfair.com/photos/68d3f4dd47f4cdba33dfbccf/1:1/w_300", vote: "62%" },
+    juan:      { pick: "Golden",                  image: "https://media.vanityfair.com/photos/68d3f4dd47f4cdba33dfbccf/1:1/w_300", vote: "62%" },
+    giuseppe:  { pick: "Dear Me",                 image: "https://media.vanityfair.com/photos/6984cc7b282cb3b32361891f/1:1/w_300", vote: "1%" } },
 
-  { category: "Best Original Screenplay",
-    josh:      { pick: "Sinners",                 image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "76%" },
-    juan:      { pick: "Sinners",                 image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "76%" },
-    giuseppe:  { pick: "Sinners",                 image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "76%" } },
-
-  { category: "Best Adapted Screenplay",
-    josh:      { pick: "Hamnet",                  image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "19%" },
-    juan:      { pick: "Hamnet",                  image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "19%" },
-    giuseppe:  { pick: "Hamnet",                  image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "19%" } },
-
-  { category: "Best Supporting Actress",
-    josh:      { pick: "Teyana Taylor",           image: "https://media.vanityfair.com/photos/69459ca03540978087923900/1:1/w_300", vote: "23%" },
-    juan:      { pick: "Teyana Taylor",           image: "https://media.vanityfair.com/photos/69459ca03540978087923900/1:1/w_300", vote: "23%" },
-    giuseppe:  { pick: "Teyana Taylor",           image: "https://media.vanityfair.com/photos/69459ca03540978087923900/1:1/w_300", vote: "23%" } },
-
-  { category: "Best Supporting Actor",
-    josh:      { pick: "Stellan Skarsgård",       image: "https://media.vanityfair.com/photos/6980e826c319510dba722560/1:1/w_300", vote: "16%" },
-    juan:      { pick: "Delroy Lindo",            image: "https://media.vanityfair.com/photos/6980e7b646b86b2fb3c36e56/1:1/w_300", vote: "17%" },
-    giuseppe:  { pick: "Jacob Elordi",            image: "https://media.vanityfair.com/photos/6980f246a9f54c8d7bb1079a/1:1/w_300", vote: "12%" } },
-
-  { category: "Best Actress",
-    josh:      { pick: "Jessie Buckley",          image: "https://media.vanityfair.com/photos/68a621e9fd15f61246dbb26d/1:1/w_300", vote: "73%" },
-    juan:      { pick: "Jessie Buckley",          image: "https://media.vanityfair.com/photos/68a621e9fd15f61246dbb26d/1:1/w_300", vote: "73%" },
-    giuseppe:  { pick: "Jessie Buckley",          image: "https://media.vanityfair.com/photos/68a621e9fd15f61246dbb26d/1:1/w_300", vote: "73%" } },
+  { category: "Best Director",
+    josh:      { pick: "Ryan Coogler",            image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "32%" },
+    juan:      { pick: "Paul Thomas Anderson",    image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "55%" },
+    giuseppe:  { pick: "Paul Thomas Anderson",    image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "55%" } },
 
   { category: "Best Actor",
     josh:      { pick: "Michael B. Jordan",       image: "https://media.vanityfair.com/photos/6980e128825f8d54ff81329b/1:1/w_300", vote: "56%" },
     juan:      { pick: "Michael B. Jordan",       image: "https://media.vanityfair.com/photos/6980e128825f8d54ff81329b/1:1/w_300", vote: "56%" },
     giuseppe:  { pick: "Timothée Chalamet",       image: "https://media.vanityfair.com/photos/69694039fea64349533e2a0d/1:1/w_300", vote: "26%" } },
 
-  { category: "Best Director",
-    josh:      { pick: "Ryan Coogler",            image: "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300", vote: "32%" },
-    juan:      { pick: "Paul Thomas Anderson",    image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "55%" },
-    giuseppe:  { pick: "Paul Thomas Anderson",    image: "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300", vote: "55%" } },
+  { category: "Best Actress",
+    josh:      { pick: "Jessie Buckley",          image: "https://media.vanityfair.com/photos/68a621e9fd15f61246dbb26d/1:1/w_300", vote: "73%" },
+    juan:      { pick: "Jessie Buckley",          image: "https://media.vanityfair.com/photos/68a621e9fd15f61246dbb26d/1:1/w_300", vote: "73%" },
+    giuseppe:  { pick: "Jessie Buckley",          image: "https://media.vanityfair.com/photos/68a621e9fd15f61246dbb26d/1:1/w_300", vote: "73%" } },
 
   { category: "Best Picture",
     josh:      { pick: "Hamnet",                 image: "https://media.vanityfair.com/photos/69459ca0dea04ab5c8909b4c/1:1/w_300", vote: "5%" },
@@ -429,7 +429,9 @@ const picks = [
 ];
 
 // Oscar winners — fill in as announced
-const OSCAR_WINNERS = {};
+const OSCAR_WINNERS = {
+  // "Best Picture": { pick: "Winner Name", image: "url" },
+};
 
 const container = document.getElementById('categories');
 
