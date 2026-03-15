@@ -16,5 +16,11 @@
     "film": "The Girl Who Cried Pearls",
     "vote": "44%",
     "image": "https://media.vanityfair.com/photos/6980ea9fa9f54c8d7bb10792/1:1/w_300"
+  },
+  "Best Costume Design": {
+    "nominee": "Kate Hawley",
+    "film": "Frankenstein",
+    "vote": "65%",
+    "image": "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300"
   }
 }
