@@ -48,5 +48,11 @@
       "vote": "20%",
       "image": "https://media.vanityfair.com/photos/6980dd3e46b86b2fb3c36e54/1:1/w_300,h_300,c_limit/Two-People-Exchanging-Saliva.jpg"
     }
-  ]
+  ],
+  "Best Supporting Actor": {
+    "nominee": "Sean Penn",
+    "film": "One Battle After Another",
+    "vote": "46%",
+    "image": "https://media.vanityfair.com/photos/68d43885b9909ad32d7385a9/1:1/w_300,h_300,c_limit/one-battle-sean-penn-embed.jpg"
+  }
 }
