@@ -84,5 +84,11 @@
     "film": "All the Empty Rooms",
     "vote": "27%",
     "image": "https://media.vanityfair.com/photos/6980ece8a9f54c8d7bb10794/1:1/w_300,h_300,c_limit/All-the-Empty-Rooms.jpg"
+  },
+  "Best Documentary Feature": {
+    "nominee": "Mr. Nobody Against Putin",
+    "film": "Mr. Nobody Against Putin",
+    "vote": "16%",
+    "image": "https://media.vanityfair.com/photos/6984cc7e90beed24b7dabbfa/1:1/w_300,h_300,c_limit/Mr-Nobody-Against-Putin-still-2025.jpg"
   }
 }
