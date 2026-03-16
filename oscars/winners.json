@@ -60,5 +60,11 @@
     "film": "One Battle After Another",
     "vote": "63%",
     "image": "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300,h_300,c_limit/vf1025-one-battle-after-another-gothams.jpg"
+  },
+  "Best Original Screenplay": {
+    "nominee": "Sinners (Ryan Coogler)",
+    "film": "Sinners",
+    "vote": "76%",
+    "image": "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300,h_300,c_limit/vf2025-most-anticipated-movies-sinners.jpg"
   }
 }
