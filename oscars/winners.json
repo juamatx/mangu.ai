@@ -72,5 +72,11 @@
     "film": "Frankenstein",
     "vote": "53%",
     "image": "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300,h_300,c_limit/Jacob-Elordi-LGM-Embed.jpg"
+  },
+  "Best Visual Effects": {
+    "nominee": "Joe Letteri et al.",
+    "film": "Avatar: Fire and Ash",
+    "vote": "70%",
+    "image": "https://media.vanityfair.com/photos/6984cc7e530004d8e8c621c0/1:1/w_300,h_300,c_limit/avatar-fire-and-ash-film-still-2025.jpg"
   }
 }
