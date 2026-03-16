@@ -66,5 +66,11 @@
     "film": "Sinners",
     "vote": "76%",
     "image": "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300,h_300,c_limit/vf2025-most-anticipated-movies-sinners.jpg"
+  },
+  "Best Production Design": {
+    "nominee": "Tamara Deverell / Shane Vieau",
+    "film": "Frankenstein",
+    "vote": "53%",
+    "image": "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300,h_300,c_limit/Jacob-Elordi-LGM-Embed.jpg"
   }
 }

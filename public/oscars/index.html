@@ -258,6 +258,80 @@
     color: rgba(201, 168, 76, 0.6);
   }
 
+  /* ── SCOREBOARD ── */
+  .scoreboard {
+    max-width: 960px;
+    margin: 40px auto 0;
+    padding: 0 20px;
+  }
+  .scoreboard-inner {
+    background: var(--card-bg);
+    border-top: 2px solid var(--oscar-border);
+    border-radius: 0 0 10px 10px;
+    padding: 32px 24px 28px;
+  }
+  .scoreboard-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 5px;
+    color: var(--oscar-border);
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .scoreboard-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+  .score-cell {
+    text-align: center;
+    padding: 16px 8px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.02);
+    transition: background 0.3s;
+  }
+  .score-cell.leader {
+    background: rgba(201,168,76,0.08);
+    box-shadow: 0 0 0 1px rgba(201,168,76,0.2);
+  }
+  .score-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+  }
+  .score-name.josh     { color: var(--red); }
+  .score-name.juan     { color: var(--juan); }
+  .score-name.giuseppe { color: var(--teal); }
+  .score-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--white);
+  }
+  .score-cell.leader .score-num { color: var(--oscar-border); }
+  .score-label {
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: 1px;
+    margin-top: 6px;
+  }
+  .score-cell.leader .score-label { color: rgba(201,168,76,0.6); }
+  .scoreboard-note {
+    text-align: center;
+    font-size: 11px;
+    color: var(--dim);
+    margin-top: 16px;
+    letter-spacing: 1px;
+  }
+  .scoreboard.hidden { display: none; }
+
+  @media (max-width: 640px) {
+    .score-num { font-size: 32px; }
+    .scoreboard-inner { padding: 20px 12px; }
+  }
+
   /* ── FOOTER ── */
   .footer {
     text-align: center;
@@ -295,6 +369,30 @@
     <span class="giuseppe">Giuseppe</span>
   </h1>
   <div class="subtitle">Every pick. Every category. Who called it?</div>
+</div>
+
+<div class="scoreboard hidden" id="scoreboard">
+  <div class="scoreboard-inner">
+    <div class="scoreboard-title">🏆 Scorecard</div>
+    <div class="scoreboard-row">
+      <div class="score-cell" id="score-josh">
+        <div class="score-name josh">Josh</div>
+        <div class="score-num" id="num-josh">0</div>
+        <div class="score-label">correct</div>
+      </div>
+      <div class="score-cell" id="score-juan">
+        <div class="score-name juan">Juan</div>
+        <div class="score-num" id="num-juan">0</div>
+        <div class="score-label">correct</div>
+      </div>
+      <div class="score-cell" id="score-giuseppe">
+        <div class="score-name giuseppe">Giuseppe</div>
+        <div class="score-num" id="num-giuseppe">0</div>
+        <div class="score-label">correct</div>
+      </div>
+    </div>
+    <div class="scoreboard-note" id="scoreboard-note"></div>
+  </div>
 </div>
 
 <div class="col-headers">
@@ -445,6 +543,7 @@ const OSCAR_WINNERS = {
   'Best Supporting Actor': { pick: 'Sean Penn', film: 'One Battle After Another', display: 'Sean Penn', image: 'https://media.vanityfair.com/photos/68d43885b9909ad32d7385a9/1:1/w_300,h_300,c_limit/one-battle-sean-penn-embed.jpg' },
   'Best Adapted Screenplay': { pick: 'One Battle After Another (Paul Thomas Anderson)', film: 'One Battle After Another', display: 'One Battle After Another', image: 'https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300,h_300,c_limit/vf1025-one-battle-after-another-gothams.jpg' },
   'Best Original Screenplay': { pick: 'Sinners (Ryan Coogler)', film: 'Sinners', display: 'Sinners', image: 'https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300,h_300,c_limit/vf2025-most-anticipated-movies-sinners.jpg' },
+  'Best Production Design': { pick: 'Tamara Deverell / Shane Vieau', film: 'Frankenstein', display: 'Frankenstein', image: 'https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300,h_300,c_limit/Jacob-Elordi-LGM-Embed.jpg' },
 };
 
 const container = document.getElementById('categories');
@@ -531,6 +630,28 @@ picks.forEach((p, i) => {
     </div>`;
   container.appendChild(card);
 });
+
+// ── Scoreboard ──
+const totalWinners = Object.keys(OSCAR_WINNERS).length;
+if (totalWinners > 0) {
+  const scores = { josh: 0, juan: 0, giuseppe: 0 };
+  picks.forEach(p => {
+    const raw = OSCAR_WINNERS[p.category];
+    if (!raw) return;
+    const wList = Array.isArray(raw) ? raw : [raw];
+    ['josh','juan','giuseppe'].forEach(person => {
+      const got = wList.some(w => p[person].pick === w.pick || p[person].pick === w.film);
+      if (got) scores[person]++;
+    });
+  });
+  const max = Math.max(scores.josh, scores.juan, scores.giuseppe);
+  ['josh','juan','giuseppe'].forEach(person => {
+    document.getElementById('num-' + person).textContent = scores[person];
+    if (scores[person] === max) document.getElementById('score-' + person).classList.add('leader');
+  });
+  document.getElementById('scoreboard-note').textContent = totalWinners + ' of ' + picks.length + ' categories announced';
+  document.getElementById('scoreboard').classList.remove('hidden');
+}
 </script>
 
 </body>
