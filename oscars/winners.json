@@ -28,5 +28,11 @@
     "film": "Frankenstein",
     "vote": "81%",
     "image": "https://media.vanityfair.com/photos/69387838ce999ee86a184d3d/1:1/w_300"
+  },
+  "Best Casting": {
+    "nominee": "Cassandra Kulukundis",
+    "film": "One Battle After Another",
+    "vote": "14%",
+    "image": "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300"
   }
 }
