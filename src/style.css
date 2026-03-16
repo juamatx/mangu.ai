@@ -17,7 +17,7 @@ html, body {
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 3;
+  z-index: 1;
 }
 
 /* ── Cursor glow ──────────────────────────────── */
@@ -35,13 +35,14 @@ html, body {
 }
 
 /* ── Vignette ─────────────────────────────────── */
-body::after {
+/* ── Vignette — applied to body background, canvas is transparent at edges ─ */
+body::before {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 2;
-  background: radial-gradient(ellipse at center, rgba(35,50,42,0.4) 0%, rgba(8,12,10,0.95) 70%);
+  z-index: 0;
+  background: radial-gradient(ellipse at center, #1a2420 0%, #080c0a 70%);
 }
 
 /* hide cursor glow on touch devices */

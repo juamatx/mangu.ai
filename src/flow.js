@@ -84,7 +84,7 @@ function sampleText(text, font, w, h) {
 }
 
 export function initFlow(canvas) {
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d', { alpha: true });
   const glow = document.getElementById('glow');
   let w, h;
   let mxPx = -9999, myPx = -9999;
@@ -197,8 +197,8 @@ export function initFlow(canvas) {
     frame++;
     if (textFrame >= 0) textFrame++;
 
-    ctx.fillStyle = 'rgba(26, 36, 32, 0.35)';
-    ctx.fillRect(0, 0, w, h);
+    // clear canvas fully each frame (canvas is transparent, vignette is CSS)
+    ctx.clearRect(0, 0, w, h);
 
     const t = frame * NOISE_SPEED;
 
