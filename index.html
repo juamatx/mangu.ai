@@ -2,49 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>mangú.ai</title>
-  <meta name="description" content="boiled. mashed. deployed.">
+  <meta name="description" content="something is transmitting.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
-  <script type="module" src="/src/main.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/style.css">
 </head>
 <body>
-
-  <header class="site-header">
-    <span class="site-wordmark">MANGÚ.AI</span>
-    <span class="site-status">
-      <span class="pulse-dot"></span>
-      SEÑAL ACTIVA
-    </span>
-  </header>
-
-  <!-- ── Hero ──────────────────────────────────────────────────────── -->
-  <section class="hero" id="hero">
-    <div class="hero-blob" aria-hidden="true"></div>
-    <div class="hero-inner">
-      <p class="hero-kicker">19.4517° N &nbsp;·&nbsp; 70.6970° W</p>
-      <h1 class="hero-title">man<em>gú</em></h1>
-      <div class="hero-rule" aria-hidden="true"></div>
-      <p class="hero-tagline">boiled.&nbsp;&nbsp;mashed.&nbsp;&nbsp;deployed.</p>
+  <canvas id="noise"></canvas>
+  <div class="overlay">
+    <div class="content">
+      <p class="signal" data-text="SIGNAL DETECTED">SIGNAL DETECTED</p>
+      <h1 class="brand" data-text="mangú">mangú</h1>
+      <p class="tagline" data-text=".ai">.ai</p>
+      <div class="status">
+        <span class="dot"></span>
+        <span class="status-text" data-text="transmitting">transmitting</span>
+      </div>
     </div>
-    <div class="hero-scroll" aria-hidden="true">
-      <span class="scroll-line"></span>
-    </div>
-  </section>
-
-  <!-- ── Statement ─────────────────────────────────────────────────── -->
-  <section class="statement" id="statement">
-    <p class="statement-text">algo se está<br><em>cocinando</em></p>
-  </section>
-
-  <!-- ── Footer ────────────────────────────────────────────────────── -->
-  <footer class="site-footer">
-    <span>© 2026 mangu.ai</span>
-    <a href="mailto:hello@mangu.ai" class="footer-email">hello@mangu.ai</a>
-    <span class="footer-coords">19° N &nbsp;·&nbsp; 70° W</span>
-  </footer>
-
+    <footer class="foot">
+      <a href="mailto:hello@mangu.ai" class="foot-link" data-text="hello@mangu.ai">hello@mangu.ai</a>
+    </footer>
+  </div>
+  <script type="module" src="/src/main.js"></script>
 </body>
 </html>
