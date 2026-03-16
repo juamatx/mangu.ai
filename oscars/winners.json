@@ -96,5 +96,11 @@
     "film": "Sinners",
     "vote": "79%",
     "image": "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300,h_300,c_limit/vf2025-most-anticipated-movies-sinners.jpg"
+  },
+  "Best Sound": {
+    "nominee": "Gareth John et al.",
+    "film": "F1",
+    "vote": "54%",
+    "image": "https://media.vanityfair.com/photos/6980f109656834c976707272/1:1/w_300,h_300,c_limit/F1.jpg"
   }
 }
