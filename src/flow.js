@@ -52,7 +52,7 @@ const PUSH_RADIUS = 50;
 const PUSH_STRENGTH = 18;
 const SPRING_BACK = 0.04;
 const DAMPING = 0.72;
-const BURST_STRENGTH = 15;    // how hard tap-burst pushes particles
+const BURST_STRENGTH = 60;    // how hard tap-burst pushes particles
 
 function sampleText(text, font, w, h) {
   const c = document.createElement('canvas');
@@ -96,8 +96,8 @@ function getGlowSprite(r, g, b, alpha, size) {
   const cx = c.getContext('2d');
   const grad = cx.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
   grad.addColorStop(0, `rgba(${r},${g},${b},1)`);
-  grad.addColorStop(0.7, `rgba(${r},${g},${b},0.8)`);
-  grad.addColorStop(0.9, `rgba(${r},${g},${b},0.15)`);
+  grad.addColorStop(0.85, `rgba(${r},${g},${b},1)`);
+  grad.addColorStop(0.95, `rgba(${r},${g},${b},0.3)`);
   grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
   cx.fillStyle = grad;
   cx.fillRect(0, 0, s, s);
@@ -115,6 +115,8 @@ export function initFlow(canvas) {
   let frame = 0;
   let textFrame = -1;
   let textParticles = null;
+  let burstTime = -999; // frame when last burst happened
+  const BURST_FREEZE = 40; // frames to let particles fly before spring re-engages
 
   const isMobile = window.innerWidth < 768;
   const ambientCount = isMobile ? 300 : 1200;
@@ -166,7 +168,7 @@ export function initFlow(canvas) {
         x: Math.random() * w, y: Math.random() * h,
         vx: 0, vy: 0,
         tx: tgt.x, ty: tgt.y,
-        color, size: 1 + Math.random() * 0.8, delay,
+        color, size: 2.5 + Math.random() * 1.5, delay,
         driftAngle: Math.random() * Math.PI * 2,
         driftSpeed: 0.005 + Math.random() * 0.01,
         driftRadius: 0.5 + Math.random() * 1,
@@ -184,9 +186,10 @@ export function initFlow(canvas) {
       const dy = p.y - by;
       const dist = Math.sqrt(dx * dx + dy * dy);
       if (dist < 1) continue;
-      // force falls off with distance, but reaches far
-      const maxReach = Math.max(w, h) * 0.5;
-      const force = Math.max(0, 1 - dist / maxReach) * BURST_STRENGTH;
+      // big blast — everything flies
+      const maxReach = Math.max(w, h);
+      const falloff = Math.max(0, 1 - dist / maxReach);
+      const force = falloff * BURST_STRENGTH;
       p.vx += (dx / dist) * force;
       p.vy += (dy / dist) * force;
     }
