@@ -114,5 +114,11 @@
     "film": "Sinners",
     "vote": "45%",
     "image": "https://media.vanityfair.com/photos/674606f96bace41e90f1f4cf/1:1/w_300,h_300,c_limit/vf2025-most-anticipated-movies-sinners.jpg"
+  },
+  "Best International Feature": {
+    "nominee": "Sentimental Value",
+    "film": "Norway",
+    "vote": "59%",
+    "image": "https://media.vanityfair.com/photos/696535c143c6f08d6191ecc9/1:1/w_300,h_300,c_limit/MCDSEVA_EC019.png"
   }
 }
