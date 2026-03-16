@@ -34,5 +34,19 @@
     "film": "One Battle After Another",
     "vote": "14%",
     "image": "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300"
-  }
+  },
+  "Best Live-Action Short": [
+    {
+      "nominee": "Sam A. Davis & Jack Piatt",
+      "film": "The Singers",
+      "vote": "12%",
+      "image": "https://media.vanityfair.com/photos/6984d5db05a9a1ff7ceb676a/1:1/w_300,h_300,c_limit/the-singers-film-still-2025.jpg"
+    },
+    {
+      "nominee": "Alexandre Singh & Natalie Musteata",
+      "film": "Two People Exchanging Saliva",
+      "vote": "20%",
+      "image": "https://media.vanityfair.com/photos/6980dd3e46b86b2fb3c36e54/1:1/w_300,h_300,c_limit/Two-People-Exchanging-Saliva.jpg"
+    }
+  ]
 }

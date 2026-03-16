@@ -432,15 +432,18 @@ const picks = [
 ];
 
 // Oscar winners — fill in as announced
+// Most categories: { pick, film, display, image }
+// For ties, use an array: [{ pick, film, display, image }, ...]
 const OSCAR_WINNERS = {
-  // "Best Picture": { pick: "Winner Name", image: "url" },
+  // "Best Picture": { pick: "Winner Name", film: "Film", display: "Display", image: "url" },
 };
 
 const container = document.getElementById('categories');
 
 picks.forEach((p, i) => {
-  const winner = OSCAR_WINNERS[p.category];
-  const hasWinner = !!winner;
+  const rawWinner = OSCAR_WINNERS[p.category];
+  const hasWinner = !!rawWinner;
+  const winnerList = hasWinner ? (Array.isArray(rawWinner) ? rawWinner : [rawWinner]) : [];
 
   // Match logic: purple when no winner, gold when winner exists and they got it right
   const cell = (person, data) => {
@@ -448,14 +451,12 @@ picks.forEach((p, i) => {
     let nameCls = '';
 
     if (hasWinner) {
-      // Compare pick to winner — check both nominee name and film name
-      const gotIt = data.pick === winner.pick || data.pick === winner.film;
+      const gotIt = winnerList.some(w => data.pick === w.pick || data.pick === w.film);
       if (gotIt) {
         posterCls = ' correct-poster';
         nameCls = ' correct';
       }
     } else {
-      // No winner yet — show purple for matching picks
       const others = ['josh','juan','giuseppe'].filter(v => v !== person);
       const matchesAnother = others.some(v => p[v].pick === data.pick);
       if (matchesAnother) {
@@ -477,17 +478,36 @@ picks.forEach((p, i) => {
     </div>`;
   };
 
-  const oscarCell = hasWinner
-    ? `<div class="pick-cell oscar">
-        <div class="poster-wrap">${winner.image ? `<img src="${winner.image}" alt="${winner.display || winner.pick}" onload="this.classList.add('loaded')">` : `<span class="poster-fallback">🏆</span>`}</div>
+  let oscarCell;
+  if (winnerList.length > 1) {
+    const inner = winnerList.map(w => {
+      const d = w.display || w.pick;
+      return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <div class="poster-wrap" style="width:40px;height:40px;flex-shrink:0;aspect-ratio:1;">
+          ${w.image ? `<img src="${w.image}" alt="${d}" onload="this.classList.add('loaded')">` : `<span class="poster-fallback">🏆</span>`}
+        </div>
+        <div class="pick-name" style="font-size:12px;">${d}</div>
+      </div>`;
+    }).join('');
+    oscarCell = `<div class="pick-cell oscar">
+      <span class="pick-owner">Winners (Tie)</span>
+      ${inner}
+    </div>`;
+  } else if (winnerList.length === 1) {
+    const w = winnerList[0];
+    const d = w.display || w.pick;
+    oscarCell = `<div class="pick-cell oscar">
+        <div class="poster-wrap">${w.image ? `<img src="${w.image}" alt="${d}" onload="this.classList.add('loaded')">` : `<span class="poster-fallback">🏆</span>`}</div>
         <span class="pick-owner">Winner</span>
-        <div class="pick-name">${winner.display || winner.pick}</div>
-      </div>`
-    : `<div class="pick-cell oscar tbd">
+        <div class="pick-name">${d}</div>
+      </div>`;
+  } else {
+    oscarCell = `<div class="pick-cell oscar tbd">
         <div class="poster-wrap"><span class="poster-fallback">?</span></div>
         <span class="pick-owner">Winner</span>
         <div class="pick-name">TBD</div>
       </div>`;
+  }
 
   const card = document.createElement('div');
   card.className = 'category-card';
