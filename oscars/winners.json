@@ -120,5 +120,11 @@
     "film": "Norway",
     "vote": "59%",
     "image": "https://media.vanityfair.com/photos/696535c143c6f08d6191ecc9/1:1/w_300,h_300,c_limit/MCDSEVA_EC019.png"
+  },
+  "Best Original Song": {
+    "nominee": "Golden",
+    "film": "KPop Demon Hunters",
+    "vote": "62%",
+    "image": "https://media.vanityfair.com/photos/68d3f4dd47f4cdba33dfbccf/1:1/w_300,h_300,c_limit/vf915-kpop-demon-hunters.png"
   }
 }
