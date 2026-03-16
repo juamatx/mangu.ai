@@ -1,8 +1,12 @@
 import { initFlow } from './flow.js'
+import { generateTexture } from './texture.js'
 import './style.css'
+
+// generate organic texture and apply to body
+const textureUrl = generateTexture()
+document.body.style.backgroundImage = `url(${textureUrl})`
 
 const canvas = document.getElementById('flow')
 const flow = initFlow(canvas)
 
-// Font may already be cached — either way, start text as soon as it's ready
 document.fonts.ready.then(() => flow.startText())

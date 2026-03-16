@@ -42,7 +42,7 @@ body::before {
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  background: radial-gradient(ellipse at center, #1a2420 0%, #080c0a 70%);
+  background: radial-gradient(ellipse at center, transparent 0%, rgba(8,12,10,0.85) 70%);
 }
 
 /* hide cursor glow on touch devices */
