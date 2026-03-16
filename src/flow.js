@@ -69,7 +69,7 @@ function sampleText(text, font, w, h) {
 
   // measure where ".ai" starts
   const fullWidth = octx.measureText(text).width;
-  const mangWidth = octx.measureText('mangú').width;
+  const mangWidth = octx.measureText('mangu').width;
   const aiStartX = (w / 2) - (fullWidth / 2) + mangWidth;
 
   const gap = Math.max(2, Math.floor(Math.min(w, h) / 280));
@@ -111,7 +111,7 @@ export function initFlow(canvas) {
 
     const fontSize = getFontSize();
     const font = `500 ${fontSize}px 'JetBrains Mono', monospace`;
-    const targets = sampleText('mangú.ai', font, w, h);
+    const targets = sampleText('mangu.ai', font, w, h);
 
     // create text particles
     textParticles = targets.map((tgt) => {
@@ -124,14 +124,9 @@ export function initFlow(canvas) {
       const maxDist = Math.sqrt(w * w + h * h) / 2;
       const delay = (dist / maxDist) * 0.3 + Math.random() * 0.2;
 
-      // on narrow screens, bias scatter toward center so it looks balanced
-      const spread = w < 768 ? 0.6 : 1;
-      const sx = (w / 2) + (Math.random() - 0.5) * w * spread;
-      const sy = (h / 2) + (Math.random() - 0.5) * h * spread;
-
       return {
-        x: sx,
-        y: sy,
+        x: Math.random() * w,
+        y: Math.random() * h,
         tx: tgt.x,
         ty: tgt.y,
         color,
