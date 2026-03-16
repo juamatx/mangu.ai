@@ -1,8 +1,13 @@
 /**
  * Particle text formation with flow field.
- * Swipe/drag to push particles, they spring back to form the name.
- * Optimized for mobile: capped DPR, reduced particles, no per-frame noise on ambient.
+ * Features: swipe push, tap-to-burst, optional particle glow.
  */
+
+// ═══════════════════════════════════════════════════
+// FEATURE FLAGS
+const PARTICLE_GLOW = true;   // soft glow per particle (set false for hard pixels)
+const GLOW_SIZE = 2;           // radius of glow (only if PARTICLE_GLOW is true)
+// ═══════════════════════════════════════════════════
 
 // ── Noise ────────────────────────────────────────
 function hash(x, y) {
@@ -30,18 +35,12 @@ function noise2D(x, y) {
 
 // ── Colors ───────────────────────────────────────
 const MANGU_COLORS = [
-  [235, 190, 80],
-  [220, 170, 60],
-  [245, 205, 100],
-  [200, 155, 50],
-  [250, 220, 130],
+  [235, 190, 80], [220, 170, 60], [245, 205, 100],
+  [200, 155, 50], [250, 220, 130],
 ];
 const AI_COLORS = [
-  [20, 160, 90],
-  [15, 135, 75],
-  [30, 180, 105],
-  [10, 110, 60],
-  [50, 195, 120],
+  [20, 160, 90], [15, 135, 75], [30, 180, 105],
+  [10, 110, 60], [50, 195, 120],
 ];
 const AMBIENT_COLOR = [100, 88, 60];
 
@@ -53,6 +52,7 @@ const PUSH_RADIUS = 50;
 const PUSH_STRENGTH = 18;
 const SPRING_BACK = 0.04;
 const DAMPING = 0.72;
+const BURST_STRENGTH = 15;    // how hard tap-burst pushes particles
 
 function sampleText(text, font, w, h) {
   const c = document.createElement('canvas');
@@ -83,6 +83,29 @@ function sampleText(text, font, w, h) {
   return points;
 }
 
+// ── Pre-render glow sprites ──────────────────────
+// One per color, cached as tiny canvases for performance
+const glowCache = new Map();
+function getGlowSprite(r, g, b, alpha, size) {
+  const key = `${r},${g},${b}`;
+  if (glowCache.has(key)) return glowCache.get(key);
+
+  const s = size * 4;
+  const c = document.createElement('canvas');
+  c.width = s; c.height = s;
+  const cx = c.getContext('2d');
+  const grad = cx.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
+  grad.addColorStop(0, `rgba(${r},${g},${b},1)`);
+  grad.addColorStop(0.7, `rgba(${r},${g},${b},0.8)`);
+  grad.addColorStop(0.9, `rgba(${r},${g},${b},0.15)`);
+  grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
+  cx.fillStyle = grad;
+  cx.fillRect(0, 0, s, s);
+
+  glowCache.set(key, c);
+  return c;
+}
+
 export function initFlow(canvas) {
   const ctx = canvas.getContext('2d', { alpha: true });
   const glow = document.getElementById('glow');
@@ -97,7 +120,6 @@ export function initFlow(canvas) {
   const ambientCount = isMobile ? 300 : 1200;
   const convergeFrames = isMobile ? 50 : CONVERGE_FRAMES;
   const springBack = isMobile ? 0.07 : SPRING_BACK;
-  // cap DPR at 2 — 3x on iPhones is overkill for particles
   const dpr = Math.min(devicePixelRatio, 2);
   let ambientParticles;
 
@@ -106,11 +128,8 @@ export function initFlow(canvas) {
     const depth = r < 0.5 ? 0 : r < 0.8 ? 1 : 2;
     const sizeScale = [0.4, 0.7, 1.2][depth];
     const alphaScale = [0.6, 0.85, 1][depth];
-
     return {
-      x: Math.random() * w,
-      y: Math.random() * h,
-      // pre-bake velocity direction (no per-frame noise on mobile)
+      x: Math.random() * w, y: Math.random() * h,
       angle: Math.random() * Math.PI * 2,
       speed: (0.3 + Math.random() * 0.5) * [0.5, 0.8, 1.2][depth],
       size: (0.5 + Math.random() * 0.8) * sizeScale,
@@ -120,12 +139,9 @@ export function initFlow(canvas) {
   }
 
   function sizeCanvas() {
-    w = window.innerWidth;
-    h = window.innerHeight;
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
-    canvas.style.width = w + 'px';
-    canvas.style.height = h + 'px';
+    w = window.innerWidth; h = window.innerHeight;
+    canvas.width = w * dpr; canvas.height = h * dpr;
+    canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
@@ -157,6 +173,23 @@ export function initFlow(canvas) {
       };
     });
     textFrame = 0;
+    glowCache.clear(); // reset glow sprites on rebuild
+  }
+
+  // ── Tap-to-burst ─────────────────────────────
+  function burst(bx, by) {
+    if (!textParticles) return;
+    for (const p of textParticles) {
+      const dx = p.x - bx;
+      const dy = p.y - by;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 1) continue;
+      // force falls off with distance, but reaches far
+      const maxReach = Math.max(w, h) * 0.5;
+      const force = Math.max(0, 1 - dist / maxReach) * BURST_STRENGTH;
+      p.vx += (dx / dist) * force;
+      p.vy += (dy / dist) * force;
+    }
   }
 
   function onPointer(e) {
@@ -176,9 +209,14 @@ export function initFlow(canvas) {
     if (glow) glow.style.display = 'none';
   }
 
+  function onTap(e) {
+    const x = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+    const y = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+    burst(x, y);
+  }
+
   function onResize() {
-    sizeCanvas();
-    initAmbient();
+    sizeCanvas(); initAmbient();
     if (textParticles) buildTextParticles();
   }
 
@@ -187,11 +225,12 @@ export function initFlow(canvas) {
   window.addEventListener('touchmove', onPointer, { passive: false });
   window.addEventListener('mouseleave', onPointerLeave);
   window.addEventListener('touchend', onPointerLeave);
+  window.addEventListener('click', onTap);
+  window.addEventListener('touchstart', onTap, { passive: true });
 
   sizeCanvas();
   initAmbient();
 
-  // pre-compute ambient color string once
   const ambColorStr = `${AMBIENT_COLOR[0]},${AMBIENT_COLOR[1]},${AMBIENT_COLOR[2]}`;
 
   function render() {
@@ -199,21 +238,18 @@ export function initFlow(canvas) {
     frame++;
     if (textFrame >= 0) textFrame++;
 
-    // clear canvas fully each frame (canvas is transparent, vignette is CSS)
     ctx.clearRect(0, 0, w, h);
 
     const t = frame * NOISE_SPEED;
 
-    // ── Ambient (lightweight — no per-frame noise on mobile) ──
+    // ── Ambient ────────────────────────────────
     for (let i = 0; i < ambientParticles.length; i++) {
       const p = ambientParticles[i];
-      // slow drift + very occasional direction change
       if (frame % 120 === 0) p.angle += (Math.random() - 0.5) * 0.5;
       p.x += Math.cos(p.angle) * p.speed;
       p.y += Math.sin(p.angle) * p.speed;
       if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
       if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
-
       ctx.fillStyle = `rgba(${ambColorStr},${p.alpha})`;
       ctx.fillRect(p.x, p.y, p.size, p.size);
     }
@@ -248,9 +284,8 @@ export function initFlow(canvas) {
           p.vy += dy * springBack;
         }
 
-        // pointer push
-        const pdx = p.x - mxPx;
-        const pdy = p.y - myPx;
+        // pointer push (continuous drag)
+        const pdx = p.x - mxPx, pdy = p.y - myPx;
         const pDist = Math.sqrt(pdx * pdx + pdy * pdy);
         if (pDist < PUSH_RADIUS && pDist > 0) {
           const force = (1 - pDist / PUSH_RADIUS) * PUSH_STRENGTH;
@@ -258,15 +293,22 @@ export function initFlow(canvas) {
           p.vy += (pdy / pDist) * force;
         }
 
-        p.vx *= DAMPING;
-        p.vy *= DAMPING;
-        p.x += p.vx;
-        p.y += p.vy;
+        p.vx *= DAMPING; p.vy *= DAMPING;
+        p.x += p.vx; p.y += p.vy;
 
         const alpha = lerp(0.3, 0.9, order);
         const [r, g, b] = p.color;
-        ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
-        ctx.fillRect(p.x, p.y, p.size, p.size);
+
+        if (PARTICLE_GLOW) {
+          const sprite = getGlowSprite(r, g, b, alpha, GLOW_SIZE);
+          const s = GLOW_SIZE * 4;
+          ctx.globalAlpha = alpha;
+          ctx.drawImage(sprite, p.x - s / 2, p.y - s / 2, s, s);
+          ctx.globalAlpha = 1;
+        } else {
+          ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+          ctx.fillRect(p.x, p.y, p.size, p.size);
+        }
       }
     }
 
