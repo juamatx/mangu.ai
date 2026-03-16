@@ -95,6 +95,8 @@ export function initFlow(canvas) {
 
   const isMobile = window.innerWidth < 768;
   const ambientCount = isMobile ? 300 : 1200;
+  const convergeFrames = isMobile ? 50 : CONVERGE_FRAMES;
+  const springBack = isMobile ? 0.07 : SPRING_BACK;
   // cap DPR at 2 — 3x on iPhones is overkill for particles
   const dpr = Math.min(devicePixelRatio, 2);
   let ambientParticles;
@@ -132,7 +134,7 @@ export function initFlow(canvas) {
   }
 
   function buildTextParticles() {
-    const fontSize = Math.min(w * 0.12, 120);
+    const fontSize = Math.min(w * 0.18, 200);
     const font = `500 ${fontSize}px 'JetBrains Mono', monospace`;
     const targets = sampleText('mangu.ai', font, w, h);
     const maxDist = Math.sqrt(w * w + h * h) / 2;
@@ -218,7 +220,7 @@ export function initFlow(canvas) {
 
     // ── Text particles ─────────────────────────
     if (textParticles && textFrame >= 0) {
-      const raw = Math.max(0, Math.min(1, textFrame / CONVERGE_FRAMES));
+      const raw = Math.max(0, Math.min(1, textFrame / convergeFrames));
       const globalOrder = raw * raw * (3 - 2 * raw);
 
       for (let i = 0; i < textParticles.length; i++) {
@@ -239,11 +241,11 @@ export function initFlow(canvas) {
         if (order < 1) {
           const n = noise2D(p.x * NOISE_SCALE + t, p.y * NOISE_SCALE + t);
           const a = n * Math.PI * 4;
-          p.vx += lerp(Math.cos(a) * 0.2, dx * SPRING_BACK, order);
-          p.vy += lerp(Math.sin(a) * 0.2, dy * SPRING_BACK, order);
+          p.vx += lerp(Math.cos(a) * 0.2, dx * springBack, order);
+          p.vy += lerp(Math.sin(a) * 0.2, dy * springBack, order);
         } else {
-          p.vx += dx * SPRING_BACK;
-          p.vy += dy * SPRING_BACK;
+          p.vx += dx * springBack;
+          p.vy += dy * springBack;
         }
 
         // pointer push
