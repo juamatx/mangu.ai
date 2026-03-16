@@ -5,6 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>mangu.ai</title>
   <meta name="description" content="mangu.ai">
+
+  <!-- OG / Social -->
+  <meta property="og:title" content="mangu.ai">
+  <meta property="og:description" content="mangu.ai">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mangu.ai">
+  <meta property="og:image" content="/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="mangu.ai">
+  <meta name="twitter:image" content="/og.png">
+
+  <!-- Favicon (inline SVG — gold dot) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23cdaf6e'/></svg>">
+
+  <!-- Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap" as="style">
@@ -13,6 +28,7 @@
 </head>
 <body>
   <canvas id="flow"></canvas>
+  <div id="glow"></div>
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>

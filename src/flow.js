@@ -1,6 +1,6 @@
 /**
  * Particle text formation with flow field.
- * Ambient particles start immediately. Text particles added once font loads.
+ * Features: depth layers, cursor glow, formation replay, vignette.
  */
 
 // ── Noise ────────────────────────────────────────
@@ -28,17 +28,14 @@ function noise2D(x, y) {
 }
 
 // ── Colors ───────────────────────────────────────
-// "mangu" — warm muted gold (like cooked mangú)
 const MANGU_COLORS = [[205,175,110],[190,160,95],[215,185,120]];
-// ".ai" — deep plantain green
 const AI_COLORS = [[75,130,60],[60,115,50],[90,145,70]];
-// ambient — dim warm gray
 const AMBIENT_COLOR = [90, 82, 65];
 
 // ── Config ───────────────────────────────────────
 const NOISE_SCALE = 0.003;
 const NOISE_SPEED = 0.0003;
-const CONVERGE_FRAMES = 105; // ~1.75s at 60fps
+const CONVERGE_FRAMES = 105;
 
 function sampleText(text, font, w, h) {
   const c = document.createElement('canvas');
@@ -71,16 +68,44 @@ function sampleText(text, font, w, h) {
 
 export function initFlow(canvas) {
   const ctx = canvas.getContext('2d');
+  const glow = document.getElementById('glow');
   let w, h;
   let mx = 0.5, my = 0.5;
+  let mxPx = 0, myPx = 0;
   let running = true;
   let frame = 0;
-  let textFrame = -1; // -1 = text not started yet
+  let textFrame = -1;
   let textParticles = null;
+  let formed = false; // true once text has fully converged
 
   const isMobile = window.innerWidth < 768;
   const ambientCount = isMobile ? 400 : 1200;
   let ambientParticles;
+
+  // ── Depth layers for ambient (parallax) ──────
+  // layer 0 = far/small/slow, layer 2 = near/big/fast
+  function makeAmbient() {
+    const layer = Math.random();
+    let depth;
+    if (layer < 0.5) depth = 0;
+    else if (layer < 0.8) depth = 1;
+    else depth = 2;
+
+    const sizeScale = [0.4, 0.7, 1.2][depth];
+    const alphaScale = [0.6, 0.85, 1][depth];
+    const speedScale = [0.5, 0.8, 1.2][depth];
+
+    return {
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.3 * speedScale,
+      vy: (Math.random() - 0.5) * 0.3 * speedScale,
+      size: (0.5 + Math.random() * 0.8) * sizeScale,
+      alpha: (0.08 + Math.random() * 0.15) * alphaScale,
+      depth,
+      speedScale,
+    };
+  }
 
   function sizeCanvas() {
     w = window.innerWidth;
@@ -93,14 +118,7 @@ export function initFlow(canvas) {
   }
 
   function initAmbient() {
-    ambientParticles = Array.from({ length: ambientCount }, () => ({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: (Math.random() - 0.5) * 0.3,
-      size: 0.5 + Math.random() * 0.8,
-      alpha: 0.08 + Math.random() * 0.15,
-    }));
+    ambientParticles = Array.from({ length: ambientCount }, makeAmbient);
   }
 
   function buildTextParticles() {
@@ -126,12 +144,38 @@ export function initFlow(canvas) {
       };
     });
     textFrame = 0;
+    formed = false;
+  }
+
+  // ── Formation replay: scatter and reform ─────
+  function scatter() {
+    if (!textParticles) return;
+    formed = false;
+    textFrame = 0;
+    const maxDist = Math.sqrt(w * w + h * h) / 2;
+    for (const p of textParticles) {
+      p.x = Math.random() * w;
+      p.y = Math.random() * h;
+      const dx = p.tx - w / 2, dy = p.ty - h / 2;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      p.delay = (dist / maxDist) * 0.3 + Math.random() * 0.2;
+    }
   }
 
   function onPointer(e) {
     const x = e.touches ? e.touches[0].clientX : e.clientX;
     const y = e.touches ? e.touches[0].clientY : e.clientY;
     mx = x / w; my = y / h;
+    mxPx = x; myPx = y;
+    if (glow) {
+      glow.style.display = 'block';
+      glow.style.left = x + 'px';
+      glow.style.top = y + 'px';
+    }
+  }
+
+  function onClick() {
+    if (formed) scatter();
   }
 
   function onResize() {
@@ -143,8 +187,9 @@ export function initFlow(canvas) {
   window.addEventListener('resize', onResize);
   window.addEventListener('mousemove', onPointer, { passive: true });
   window.addEventListener('touchmove', onPointer, { passive: true });
+  window.addEventListener('click', onClick);
+  window.addEventListener('touchend', onClick);
 
-  // init canvas + ambient immediately
   sizeCanvas();
   initAmbient();
 
@@ -158,23 +203,35 @@ export function initFlow(canvas) {
 
     const t = frame * NOISE_SPEED;
 
+    // parallax offset from cursor (subtle)
+    const pxOffX = (mx - 0.5) * 2;
+    const pxOffY = (my - 0.5) * 2;
+
     // ── Ambient ────────────────────────────────
     for (let i = 0; i < ambientParticles.length; i++) {
       const p = ambientParticles[i];
       const n = noise2D(p.x * NOISE_SCALE + t, p.y * NOISE_SCALE + t * 0.7);
       const angle = n * Math.PI * 4;
-      p.x += Math.cos(angle) * 0.4 + p.vx;
-      p.y += Math.sin(angle) * 0.4 + p.vy;
+      p.x += Math.cos(angle) * 0.4 * p.speedScale + p.vx;
+      p.y += Math.sin(angle) * 0.4 * p.speedScale + p.vy;
       if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
       if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
+
+      // parallax: deeper layers shift more with cursor
+      const parallax = [0, 1.5, 4][p.depth];
+      const drawX = p.x + pxOffX * parallax;
+      const drawY = p.y + pxOffY * parallax;
+
       ctx.fillStyle = `rgba(${AMBIENT_COLOR[0]},${AMBIENT_COLOR[1]},${AMBIENT_COLOR[2]},${p.alpha})`;
-      ctx.fillRect(p.x, p.y, p.size, p.size);
+      ctx.fillRect(drawX, drawY, p.size, p.size);
     }
 
     // ── Text particles ─────────────────────────
     if (textParticles && textFrame >= 0) {
       const raw = Math.max(0, Math.min(1, textFrame / CONVERGE_FRAMES));
       const globalOrder = raw * raw * (3 - 2 * raw);
+
+      if (raw >= 1 && !formed) formed = true;
 
       for (let i = 0; i < textParticles.length; i++) {
         const p = textParticles[i];
@@ -184,10 +241,10 @@ export function initFlow(canvas) {
         if (order < 1) {
           const n = noise2D(p.x * NOISE_SCALE + t, p.y * NOISE_SCALE + t);
           const a = n * Math.PI * 4;
-          const cx = Math.cos(a) * 1.8, cy = Math.sin(a) * 1.8;
+          const cvx = Math.cos(a) * 1.8, cvy = Math.sin(a) * 1.8;
           const dx = p.tx - p.x, dy = p.ty - p.y;
-          p.x += lerp(cx, dx * 0.08, order);
-          p.y += lerp(cy, dy * 0.08, order);
+          p.x += lerp(cvx, dx * 0.08, order);
+          p.y += lerp(cvy, dy * 0.08, order);
         } else {
           p.driftAngle += p.driftSpeed;
           p.x = p.tx + Math.cos(p.driftAngle) * p.driftRadius;
@@ -217,6 +274,7 @@ export function initFlow(canvas) {
 
   return {
     startText: buildTextParticles,
+    scatter,
     destroy: () => { running = false; },
   };
 }
