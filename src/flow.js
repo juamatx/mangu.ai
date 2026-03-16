@@ -43,8 +43,8 @@ const AMBIENT_COLOR = [80, 75, 95];
 // ── Config ───────────────────────────────────────
 const NOISE_SCALE = 0.003;
 const NOISE_SPEED = 0.0003;
-const CONVERGE_START = 80;
-const CONVERGE_END = 320;
+const CONVERGE_START = 15;
+const CONVERGE_END = 120;
 const CONVERGE_DURATION = CONVERGE_END - CONVERGE_START;
 
 // ── Sample text pixels ───────────────────────────
@@ -122,11 +122,16 @@ export function initFlow(canvas) {
       const dy = tgt.y - h / 2;
       const dist = Math.sqrt(dx * dx + dy * dy);
       const maxDist = Math.sqrt(w * w + h * h) / 2;
-      const delay = (dist / maxDist) * 0.6 + Math.random() * 0.4;
+      const delay = (dist / maxDist) * 0.3 + Math.random() * 0.2;
+
+      // on narrow screens, bias scatter toward center so it looks balanced
+      const spread = w < 768 ? 0.6 : 1;
+      const sx = (w / 2) + (Math.random() - 0.5) * w * spread;
+      const sy = (h / 2) + (Math.random() - 0.5) * h * spread;
 
       return {
-        x: Math.random() * w,
-        y: Math.random() * h,
+        x: sx,
+        y: sy,
         tx: tgt.x,
         ty: tgt.y,
         color,
@@ -212,8 +217,8 @@ export function initFlow(canvas) {
         // pull toward target
         const dx = p.tx - p.x;
         const dy = p.ty - p.y;
-        const orderVx = dx * 0.04;
-        const orderVy = dy * 0.04;
+        const orderVx = dx * 0.08;
+        const orderVy = dy * 0.08;
 
         p.x += lerp(chaosVx, orderVx, order);
         p.y += lerp(chaosVy, orderVy, order);
