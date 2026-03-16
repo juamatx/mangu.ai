@@ -102,5 +102,11 @@
     "film": "F1",
     "vote": "54%",
     "image": "https://media.vanityfair.com/photos/6980f109656834c976707272/1:1/w_300,h_300,c_limit/F1.jpg"
+  },
+  "Best Film Editing": {
+    "nominee": "Andy Jurgensen",
+    "film": "One Battle After Another",
+    "vote": "48%",
+    "image": "https://media.vanityfair.com/photos/6900e3eac5e7673f1832c621/1:1/w_300,h_300,c_limit/vf1025-one-battle-after-another-gothams.jpg"
   }
 }
