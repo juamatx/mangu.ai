@@ -1,6 +1,7 @@
 /**
  * Particle text formation with flow field.
  * Swipe/drag to push particles, they spring back to form the name.
+ * Optimized for mobile: capped DPR, reduced particles, no per-frame noise on ambient.
  */
 
 // ── Noise ────────────────────────────────────────
@@ -28,18 +29,30 @@ function noise2D(x, y) {
 }
 
 // ── Colors ───────────────────────────────────────
-const MANGU_COLORS = [[205,175,110],[190,160,95],[215,185,120]];
-const AI_COLORS = [[75,130,60],[60,115,50],[90,145,70]];
-const AMBIENT_COLOR = [90, 82, 65];
+const MANGU_COLORS = [
+  [235, 190, 80],
+  [220, 170, 60],
+  [245, 205, 100],
+  [200, 155, 50],
+  [250, 220, 130],
+];
+const AI_COLORS = [
+  [20, 160, 90],
+  [15, 135, 75],
+  [30, 180, 105],
+  [10, 110, 60],
+  [50, 195, 120],
+];
+const AMBIENT_COLOR = [100, 88, 60];
 
 // ── Config ───────────────────────────────────────
 const NOISE_SCALE = 0.003;
 const NOISE_SPEED = 0.0003;
 const CONVERGE_FRAMES = 105;
-const PUSH_RADIUS = 80;       // px — how far the finger/cursor pushes
-const PUSH_STRENGTH = 12;     // how hard particles get shoved
-const SPRING_BACK = 0.08;     // how fast they return to target
-const DAMPING = 0.88;         // velocity decay
+const PUSH_RADIUS = 120;
+const PUSH_STRENGTH = 18;
+const SPRING_BACK = 0.05;
+const DAMPING = 0.82;
 
 function sampleText(text, font, w, h) {
   const c = document.createElement('canvas');
@@ -74,44 +87,44 @@ export function initFlow(canvas) {
   const ctx = canvas.getContext('2d');
   const glow = document.getElementById('glow');
   let w, h;
-  let mxPx = -9999, myPx = -9999; // pointer position in pixels
+  let mxPx = -9999, myPx = -9999;
   let running = true;
   let frame = 0;
   let textFrame = -1;
   let textParticles = null;
 
   const isMobile = window.innerWidth < 768;
-  const ambientCount = isMobile ? 400 : 1200;
+  const ambientCount = isMobile ? 300 : 1200;
+  // cap DPR at 2 — 3x on iPhones is overkill for particles
+  const dpr = Math.min(devicePixelRatio, 2);
   let ambientParticles;
 
-  // depth layers for ambient parallax
   function makeAmbient() {
     const r = Math.random();
     const depth = r < 0.5 ? 0 : r < 0.8 ? 1 : 2;
     const sizeScale = [0.4, 0.7, 1.2][depth];
     const alphaScale = [0.6, 0.85, 1][depth];
-    const speedScale = [0.5, 0.8, 1.2][depth];
 
     return {
       x: Math.random() * w,
       y: Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.3 * speedScale,
-      vy: (Math.random() - 0.5) * 0.3 * speedScale,
+      // pre-bake velocity direction (no per-frame noise on mobile)
+      angle: Math.random() * Math.PI * 2,
+      speed: (0.3 + Math.random() * 0.5) * [0.5, 0.8, 1.2][depth],
       size: (0.5 + Math.random() * 0.8) * sizeScale,
       alpha: (0.08 + Math.random() * 0.15) * alphaScale,
       depth,
-      speedScale,
     };
   }
 
   function sizeCanvas() {
     w = window.innerWidth;
     h = window.innerHeight;
-    canvas.width = w * devicePixelRatio;
-    canvas.height = h * devicePixelRatio;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
     canvas.style.width = w + 'px';
     canvas.style.height = h + 'px';
-    ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
   function initAmbient() {
@@ -133,7 +146,7 @@ export function initFlow(canvas) {
 
       return {
         x: Math.random() * w, y: Math.random() * h,
-        vx: 0, vy: 0,  // velocity for spring physics
+        vx: 0, vy: 0,
         tx: tgt.x, ty: tgt.y,
         color, size: 1 + Math.random() * 0.8, delay,
         driftAngle: Math.random() * Math.PI * 2,
@@ -145,6 +158,7 @@ export function initFlow(canvas) {
   }
 
   function onPointer(e) {
+    e.preventDefault();
     const x = e.touches ? e.touches[0].clientX : e.clientX;
     const y = e.touches ? e.touches[0].clientY : e.clientY;
     mxPx = x; myPx = y;
@@ -168,12 +182,15 @@ export function initFlow(canvas) {
 
   window.addEventListener('resize', onResize);
   window.addEventListener('mousemove', onPointer, { passive: true });
-  window.addEventListener('touchmove', onPointer, { passive: true });
+  window.addEventListener('touchmove', onPointer, { passive: false });
   window.addEventListener('mouseleave', onPointerLeave);
   window.addEventListener('touchend', onPointerLeave);
 
   sizeCanvas();
   initAmbient();
+
+  // pre-compute ambient color string once
+  const ambColorStr = `${AMBIENT_COLOR[0]},${AMBIENT_COLOR[1]},${AMBIENT_COLOR[2]}`;
 
   function render() {
     if (!running) return;
@@ -184,25 +201,19 @@ export function initFlow(canvas) {
     ctx.fillRect(0, 0, w, h);
 
     const t = frame * NOISE_SPEED;
-    const pxOffX = (mxPx / w - 0.5) * 2;
-    const pxOffY = (myPx / h - 0.5) * 2;
 
-    // ── Ambient ────────────────────────────────
+    // ── Ambient (lightweight — no per-frame noise on mobile) ──
     for (let i = 0; i < ambientParticles.length; i++) {
       const p = ambientParticles[i];
-      const n = noise2D(p.x * NOISE_SCALE + t, p.y * NOISE_SCALE + t * 0.7);
-      const angle = n * Math.PI * 4;
-      p.x += Math.cos(angle) * 0.4 * p.speedScale + p.vx;
-      p.y += Math.sin(angle) * 0.4 * p.speedScale + p.vy;
+      // slow drift + very occasional direction change
+      if (frame % 120 === 0) p.angle += (Math.random() - 0.5) * 0.5;
+      p.x += Math.cos(p.angle) * p.speed;
+      p.y += Math.sin(p.angle) * p.speed;
       if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
       if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
 
-      const parallax = [0, 1.5, 4][p.depth];
-      const drawX = p.x + pxOffX * parallax;
-      const drawY = p.y + pxOffY * parallax;
-
-      ctx.fillStyle = `rgba(${AMBIENT_COLOR[0]},${AMBIENT_COLOR[1]},${AMBIENT_COLOR[2]},${p.alpha})`;
-      ctx.fillRect(drawX, drawY, p.size, p.size);
+      ctx.fillStyle = `rgba(${ambColorStr},${p.alpha})`;
+      ctx.fillRect(p.x, p.y, p.size, p.size);
     }
 
     // ── Text particles ─────────────────────────
@@ -215,7 +226,6 @@ export function initFlow(canvas) {
         const pRaw = Math.max(0, Math.min(1, (globalOrder - p.delay * 0.3) / 0.7));
         const order = pRaw * pRaw * (3 - 2 * pRaw);
 
-        // target position (with gentle drift once formed)
         let targetX = p.tx, targetY = p.ty;
         if (order >= 1) {
           p.driftAngle += p.driftSpeed;
@@ -223,25 +233,20 @@ export function initFlow(canvas) {
           targetY = p.ty + Math.sin(p.driftAngle) * p.driftRadius;
         }
 
-        // spring force toward target
         const dx = targetX - p.x;
         const dy = targetY - p.y;
 
         if (order < 1) {
-          // during formation: blend chaos flow with spring
           const n = noise2D(p.x * NOISE_SCALE + t, p.y * NOISE_SCALE + t);
           const a = n * Math.PI * 4;
-          const chaosX = Math.cos(a) * 2;
-          const chaosY = Math.sin(a) * 2;
-          p.vx += lerp(chaosX * 0.1, dx * SPRING_BACK, order);
-          p.vy += lerp(chaosY * 0.1, dy * SPRING_BACK, order);
+          p.vx += lerp(Math.cos(a) * 0.2, dx * SPRING_BACK, order);
+          p.vy += lerp(Math.sin(a) * 0.2, dy * SPRING_BACK, order);
         } else {
-          // formed: pure spring
           p.vx += dx * SPRING_BACK;
           p.vy += dy * SPRING_BACK;
         }
 
-        // pointer push (works during and after formation)
+        // pointer push
         const pdx = p.x - mxPx;
         const pdy = p.y - myPx;
         const pDist = Math.sqrt(pdx * pdx + pdy * pdy);
@@ -251,7 +256,6 @@ export function initFlow(canvas) {
           p.vy += (pdy / pDist) * force;
         }
 
-        // apply velocity with damping
         p.vx *= DAMPING;
         p.vy *= DAMPING;
         p.x += p.vx;
