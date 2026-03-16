@@ -51,8 +51,8 @@ const NOISE_SPEED = 0.0003;
 const CONVERGE_FRAMES = 105;
 const PUSH_RADIUS = 120;
 const PUSH_STRENGTH = 18;
-const SPRING_BACK = 0.05;
-const DAMPING = 0.82;
+const SPRING_BACK = 0.04;
+const DAMPING = 0.72;
 
 function sampleText(text, font, w, h) {
   const c = document.createElement('canvas');
