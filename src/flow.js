@@ -1,6 +1,6 @@
 /**
- * Particle flow field with chaos-to-order transition.
- * Particles start scattered, then converge into orbits around center.
+ * Particle text formation with flow field.
+ * Particles converge from chaos to spell "mangú.ai"
  */
 
 // ── Noise ────────────────────────────────────────
@@ -27,51 +27,77 @@ function noise2D(x, y) {
   ) * 0.5 + 0.5;
 }
 
+// ── Colors ───────────────────────────────────────
+const MANGU_COLORS = [
+  [230, 225, 215],
+  [215, 210, 200],
+  [240, 235, 228],
+];
+const AI_COLORS = [
+  [139, 92, 246],
+  [167, 120, 255],
+  [110, 70, 220],
+];
+const AMBIENT_COLOR = [80, 75, 95];
+
 // ── Config ───────────────────────────────────────
-const COUNT_DESKTOP = 5000;
-const COUNT_MOBILE = 2000;
 const NOISE_SCALE = 0.003;
 const NOISE_SPEED = 0.0003;
-const ACCENT_R = 139, ACCENT_G = 92, ACCENT_B = 246;
-
-// Transition timing (frames)
-const CONVERGE_START = 60;    // start pulling in after 1s
-const CONVERGE_END = 360;     // fully ordered by ~6s
+const CONVERGE_START = 80;
+const CONVERGE_END = 320;
 const CONVERGE_DURATION = CONVERGE_END - CONVERGE_START;
+
+// ── Sample text pixels ───────────────────────────
+function sampleText(text, font, w, h) {
+  const offscreen = document.createElement('canvas');
+  offscreen.width = w;
+  offscreen.height = h;
+  const octx = offscreen.getContext('2d');
+
+  octx.fillStyle = '#000';
+  octx.fillRect(0, 0, w, h);
+
+  octx.font = font;
+  octx.textAlign = 'center';
+  octx.textBaseline = 'middle';
+  octx.fillStyle = '#fff';
+  octx.fillText(text, w / 2, h / 2);
+
+  const imageData = octx.getImageData(0, 0, w, h);
+  const pixels = imageData.data;
+  const points = [];
+
+  // measure where ".ai" starts
+  const fullWidth = octx.measureText(text).width;
+  const mangWidth = octx.measureText('mangú').width;
+  const aiStartX = (w / 2) - (fullWidth / 2) + mangWidth;
+
+  const gap = Math.max(2, Math.floor(Math.min(w, h) / 280));
+
+  for (let y = 0; y < h; y += gap) {
+    for (let x = 0; x < w; x += gap) {
+      const i = (y * w + x) * 4;
+      if (pixels[i] > 128) {
+        const isAi = x >= aiStartX;
+        points.push({ x, y, isAi });
+      }
+    }
+  }
+  return points;
+}
 
 export function initFlow(canvas) {
   const ctx = canvas.getContext('2d');
-  let w, h, particles;
+  let w, h, textParticles, ambientParticles;
   let mx = 0.5, my = 0.5;
   let running = true;
   let frame = 0;
 
   const isMobile = window.innerWidth < 768;
-  const count = isMobile ? COUNT_MOBILE : COUNT_DESKTOP;
+  const ambientCount = isMobile ? 400 : 1200;
 
-  // Orbit radii bands — particles settle into rings
-  const BANDS = [0.06, 0.10, 0.15, 0.21, 0.28, 0.36, 0.44];
-
-  function createParticle() {
-    // start fully scattered
-    const x = Math.random() * w;
-    const y = Math.random() * h;
-
-    // assign an orbit band + slight offset for organic feel
-    const band = BANDS[Math.floor(Math.random() * BANDS.length)];
-    const orbitRadius = band + (Math.random() - 0.5) * 0.03;
-    const orbitAngle = Math.random() * Math.PI * 2;
-    const orbitSpeed = (0.002 + Math.random() * 0.004) * (Math.random() < 0.5 ? 1 : -1);
-
-    return {
-      x, y,
-      orbitRadius,
-      orbitAngle,
-      orbitSpeed,
-      size: 0.5 + Math.random() * 1,
-      life: 400 + Math.random() * 300,
-      age: 0,
-    };
+  function getFontSize() {
+    return Math.min(window.innerWidth * 0.12, 120);
   }
 
   function init() {
@@ -82,7 +108,48 @@ export function initFlow(canvas) {
     canvas.style.width = w + 'px';
     canvas.style.height = h + 'px';
     ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
-    particles = Array.from({ length: count }, createParticle);
+
+    const fontSize = getFontSize();
+    const font = `500 ${fontSize}px 'JetBrains Mono', monospace`;
+    const targets = sampleText('mangú.ai', font, w, h);
+
+    // create text particles
+    textParticles = targets.map((tgt) => {
+      const colors = tgt.isAi ? AI_COLORS : MANGU_COLORS;
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      // stagger: particles closer to center converge first
+      const dx = tgt.x - w / 2;
+      const dy = tgt.y - h / 2;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const maxDist = Math.sqrt(w * w + h * h) / 2;
+      const delay = (dist / maxDist) * 0.6 + Math.random() * 0.4;
+
+      return {
+        x: Math.random() * w,
+        y: Math.random() * h,
+        tx: tgt.x,
+        ty: tgt.y,
+        color,
+        size: 1 + Math.random() * 0.8,
+        delay,
+        settled: false,
+        driftAngle: Math.random() * Math.PI * 2,
+        driftSpeed: 0.005 + Math.random() * 0.01,
+        driftRadius: 0.5 + Math.random() * 1,
+      };
+    });
+
+    // ambient scattered particles
+    ambientParticles = Array.from({ length: ambientCount }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      size: 0.5 + Math.random() * 0.8,
+      alpha: 0.08 + Math.random() * 0.15,
+    }));
+
+    frame = 0;
   }
 
   function onPointer(e) {
@@ -102,84 +169,75 @@ export function initFlow(canvas) {
     frame++;
 
     // fade trail
-    ctx.fillStyle = 'rgba(8, 8, 12, 0.1)';
+    ctx.fillStyle = 'rgba(8, 8, 12, 0.15)';
     ctx.fillRect(0, 0, w, h);
 
     const t = frame * NOISE_SPEED;
-
-    // convergence progress: 0 = chaos, 1 = fully ordered
     const rawProgress = Math.max(0, Math.min(1, (frame - CONVERGE_START) / CONVERGE_DURATION));
-    // ease in-out for smooth transition
-    const order = rawProgress * rawProgress * (3 - 2 * rawProgress);
+    const globalOrder = rawProgress * rawProgress * (3 - 2 * rawProgress);
 
-    const centerX = w * 0.5;
-    const centerY = h * 0.5;
-    // use smaller dimension so orbits are circular
-    const dim = Math.min(w, h);
+    // ── Ambient particles ──────────────────────
+    for (let i = 0; i < ambientParticles.length; i++) {
+      const p = ambientParticles[i];
+      const n = noise2D(p.x * NOISE_SCALE + t, p.y * NOISE_SCALE + t * 0.7);
+      const angle = n * Math.PI * 4;
+      p.x += Math.cos(angle) * 0.4 + p.vx;
+      p.y += Math.sin(angle) * 0.4 + p.vy;
 
-    for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
-      p.age++;
+      // wrap around
+      if (p.x < 0) p.x = w;
+      if (p.x > w) p.x = 0;
+      if (p.y < 0) p.y = h;
+      if (p.y > h) p.y = 0;
 
-      if (p.age > p.life) {
-        // respawn — if ordered, spawn near orbit; if chaotic, spawn anywhere
-        const np = createParticle();
-        if (order > 0.5) {
-          np.x = centerX + Math.cos(np.orbitAngle) * np.orbitRadius * dim;
-          np.y = centerY + Math.sin(np.orbitAngle) * np.orbitRadius * dim;
-        }
-        np.age = 0;
-        particles[i] = np;
-        continue;
+      ctx.fillStyle = `rgba(${AMBIENT_COLOR[0]},${AMBIENT_COLOR[1]},${AMBIENT_COLOR[2]},${p.alpha})`;
+      ctx.fillRect(p.x, p.y, p.size, p.size);
+    }
+
+    // ── Text particles ─────────────────────────
+    for (let i = 0; i < textParticles.length; i++) {
+      const p = textParticles[i];
+
+      // per-particle progress (staggered by delay)
+      const pProgress = Math.max(0, Math.min(1, (globalOrder - p.delay * 0.3) / 0.7));
+      const order = pProgress * pProgress * (3 - 2 * pProgress);
+
+      if (order < 1) {
+        // chaos phase: flow field movement
+        const n = noise2D(p.x * NOISE_SCALE + t, p.y * NOISE_SCALE + t);
+        const angle = n * Math.PI * 4;
+        const chaosVx = Math.cos(angle) * 1.8;
+        const chaosVy = Math.sin(angle) * 1.8;
+
+        // pull toward target
+        const dx = p.tx - p.x;
+        const dy = p.ty - p.y;
+        const orderVx = dx * 0.04;
+        const orderVy = dy * 0.04;
+
+        p.x += lerp(chaosVx, orderVx, order);
+        p.y += lerp(chaosVy, orderVy, order);
+      } else {
+        // settled: gentle drift around target
+        p.driftAngle += p.driftSpeed;
+        p.x = p.tx + Math.cos(p.driftAngle) * p.driftRadius;
+        p.y = p.ty + Math.sin(p.driftAngle) * p.driftRadius;
       }
 
-      // advance orbit angle
-      p.orbitAngle += p.orbitSpeed;
-
-      // target position (orbit)
-      const tx = centerX + Math.cos(p.orbitAngle) * p.orbitRadius * dim;
-      const ty = centerY + Math.sin(p.orbitAngle) * p.orbitRadius * dim;
-
-      // chaotic movement: flow field
-      const n = noise2D(p.x * NOISE_SCALE + t, p.y * NOISE_SCALE + t);
-      const angle = n * Math.PI * 4;
-      const chaosVx = Math.cos(angle) * 1.5;
-      const chaosVy = Math.sin(angle) * 1.5;
-
-      // ordered movement: move toward orbit target
-      const dx = tx - p.x;
-      const dy = ty - p.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      const pull = Math.min(dist, 3) / Math.max(dist, 0.01);
-      const orderVx = dx * pull * 0.06;
-      const orderVy = dy * pull * 0.06;
-
-      // blend chaos and order
-      p.x += lerp(chaosVx, orderVx, order);
-      p.y += lerp(chaosVy, orderVy, order);
-
-      // pointer warp (subtle)
-      const pdx = mx - p.x / w;
-      const pdy = my - p.y / h;
+      // pointer repel (subtle)
+      const pdx = p.x / w - mx;
+      const pdy = p.y / h - my;
       const pDist = Math.sqrt(pdx * pdx + pdy * pdy);
-      const pInf = Math.max(0, 1 - pDist / 0.25) * 0.3;
-      p.x += pdx * pInf;
-      p.y += pdy * pInf;
+      if (pDist < 0.08) {
+        const force = (1 - pDist / 0.08) * 2;
+        p.x += pdx / pDist * force;
+        p.y += pdy / pDist * force;
+      }
 
-      // alpha
-      const cx = (p.x - centerX) / dim;
-      const cy = (p.y - centerY) / dim;
-      const cDist = Math.sqrt(cx * cx + cy * cy);
-      const centerAlpha = lerp(0.8, 0.25, Math.min(1, cDist / 0.5));
-      const lifeFade = Math.min(1, p.age / 40) * Math.min(1, (p.life - p.age) / 40);
-      const alpha = centerAlpha * lifeFade;
+      // alpha: fade in as they converge
+      const alpha = lerp(0.3, 0.9, order);
 
-      // color: white core, accent at edges
-      const accentMix = Math.min(1, cDist / 0.35);
-      const r = Math.round(lerp(210, ACCENT_R, accentMix));
-      const g = Math.round(lerp(210, ACCENT_G, accentMix));
-      const b = Math.round(lerp(220, ACCENT_B, accentMix));
-
+      const [r, g, b] = p.color;
       ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
       ctx.fillRect(p.x, p.y, p.size, p.size);
     }
