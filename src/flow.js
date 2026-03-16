@@ -197,7 +197,7 @@ export function initFlow(canvas) {
     frame++;
     if (textFrame >= 0) textFrame++;
 
-    ctx.fillStyle = 'rgba(10, 15, 12, 0.15)';
+    ctx.fillStyle = 'rgba(26, 36, 32, 0.35)';
     ctx.fillRect(0, 0, w, h);
 
     const t = frame * NOISE_SPEED;
