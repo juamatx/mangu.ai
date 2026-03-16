@@ -78,5 +78,11 @@
     "film": "Avatar: Fire and Ash",
     "vote": "70%",
     "image": "https://media.vanityfair.com/photos/6984cc7e530004d8e8c621c0/1:1/w_300,h_300,c_limit/avatar-fire-and-ash-film-still-2025.jpg"
+  },
+  "Best Documentary Short": {
+    "nominee": "Joshua Seftel & Conall Jones",
+    "film": "All the Empty Rooms",
+    "vote": "27%",
+    "image": "https://media.vanityfair.com/photos/6980ece8a9f54c8d7bb10794/1:1/w_300,h_300,c_limit/All-the-Empty-Rooms.jpg"
   }
 }
