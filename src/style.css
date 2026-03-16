@@ -5,11 +5,9 @@
 }
 
 :root {
-  --bg: #06060a;
-  --fg: #e0dfe4;
-  --dim: #4a4955;
+  --bg: #08080c;
+  --fg: #e8e7ed;
   --accent: #8b5cf6;
-  --bloom: rgba(139, 92, 246, 0.12);
   --mono: 'JetBrains Mono', monospace;
 }
 
@@ -22,8 +20,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Noise canvas ─────────────────────────────── */
-#noise {
+#flow {
   position: fixed;
   inset: 0;
   width: 100%;
@@ -31,152 +28,31 @@ html, body {
   z-index: 0;
 }
 
-/* ── Overlay ──────────────────────────────────── */
 .overlay {
   position: fixed;
   inset: 0;
   z-index: 1;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   pointer-events: none;
 }
 
-.content {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-}
-
-/* ── Signal line ──────────────────────────────── */
-.signal {
-  font-size: 0.65rem;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: var(--dim);
-  margin-bottom: 1.2rem;
-  opacity: 0;
-  animation: flickerIn 1.8s ease-out 0.5s forwards;
-}
-
-/* ── Brand ────────────────────────────────────── */
 .brand {
-  font-size: clamp(3.5rem, 12vw, 9rem);
+  font-size: clamp(2.8rem, 10vw, 7rem);
   font-weight: 300;
   letter-spacing: -0.02em;
   line-height: 1;
-  color: var(--fg);
   opacity: 0;
-  animation: flickerIn 2s ease-out 0.9s forwards;
-  position: relative;
+  animation: fadeIn 2.4s ease-out 0.6s forwards;
 }
 
-.brand::after {
-  content: '';
-  position: absolute;
-  inset: -40% -20%;
-  background: radial-gradient(ellipse at center, var(--bloom) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: -1;
-}
-
-/* ── Tagline ──────────────────────────────────── */
-.tagline {
-  font-size: clamp(1.2rem, 4vw, 2.4rem);
-  font-weight: 300;
+.ai {
   color: var(--accent);
-  margin-top: -0.2em;
-  opacity: 0;
-  animation: flickerIn 1.6s ease-out 1.4s forwards;
+  font-weight: 400;
 }
 
-/* ── Status ───────────────────────────────────── */
-.status {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 2rem;
-  opacity: 0;
-  animation: flickerIn 1.4s ease-out 2s forwards;
-}
-
-.dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  animation: pulse 2s ease-in-out infinite;
-}
-
-.status-text {
-  font-size: 0.7rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--dim);
-}
-
-/* ── Footer ───────────────────────────────────── */
-.foot {
-  position: absolute;
-  bottom: 2rem;
-  opacity: 0;
-  animation: flickerIn 1.2s ease-out 2.6s forwards;
-  pointer-events: auto;
-}
-
-.foot-link {
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  color: var(--dim);
-  text-decoration: none;
-  transition: color 0.3s;
-}
-
-.foot-link:hover {
-  color: var(--accent);
-}
-
-/* ── Animations ───────────────────────────────── */
-@keyframes flickerIn {
-  0%   { opacity: 0; }
-  10%  { opacity: 0.4; }
-  12%  { opacity: 0.1; }
-  20%  { opacity: 0.6; }
-  22%  { opacity: 0.2; }
-  35%  { opacity: 0.8; }
-  37%  { opacity: 0.4; }
-  50%  { opacity: 0.9; }
-  100% { opacity: 1; }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 0.4; transform: scale(1); }
-  50%      { opacity: 1; transform: scale(1.4); }
-}
-
-/* ── Scanline overlay (subtle) ────────────────── */
-.overlay::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.03) 2px,
-    rgba(0, 0, 0, 0.03) 4px
-  );
-  pointer-events: none;
-  z-index: 10;
-}
-
-/* ── Mobile ───────────────────────────────────── */
-@media (max-width: 600px) {
-  .signal { font-size: 0.55rem; letter-spacing: 0.25em; }
-  .status-text { font-size: 0.6rem; }
-  .foot { bottom: 1.5rem; }
-  .foot-link { font-size: 0.6rem; }
+@keyframes fadeIn {
+  0%   { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
 }

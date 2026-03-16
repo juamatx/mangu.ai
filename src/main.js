@@ -1,5 +1,5 @@
-import { initNoise } from './noise.js'
+import { initFlow } from './flow.js'
 import './style.css'
 
-const canvas = document.getElementById('noise')
-initNoise(canvas)
+const canvas = document.getElementById('flow')
+initFlow(canvas)
