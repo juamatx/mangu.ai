@@ -188,7 +188,7 @@ function renderDetail(ticker, data) {
   // chart + regime sidebar
   html += `
     <div class="detail-grid">
-      <div style="margin:0 -0.5rem"><div id="chart" class="chart-box"></div></div>
+      <div style="margin:0 -0.5rem"><div id="chart" class="chart-box chart-reveal"></div></div>
       ${currentRegime ? regimeSidebarHTML(currentRegime) : ""}
     </div>`;
 
@@ -574,9 +574,14 @@ function drawChart(prices, regimes) {
     },
     shapes, annotations,
     hovermode: isMobile ? "closest" : "x unified",
-    dragmode: isMobile ? "pan" : "zoom",
+    dragmode: isMobile ? false : "zoom",
     height: isMobile ? 350 : 520,
   };
 
-  Plotly.newPlot(el, traces, layout, { responsive: true, displayModeBar: false, displaylogo: false, scrollZoom: isMobile });
+  Plotly.newPlot(el, traces, layout, { responsive: true, displayModeBar: false, displaylogo: false, scrollZoom: isMobile ? false : true })
+    .then(() => {
+      // wipe the chart in left-to-right once it's actually drawn
+      if (prefersReducedMotion()) { el.classList.add("alive"); return; }
+      requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("alive")));
+    });
 }
