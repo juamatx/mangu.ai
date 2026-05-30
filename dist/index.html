@@ -2,50 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>mangú.ai</title>
-  <meta name="description" content="boiled. mashed. deployed.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>mangu.ai</title>
+  <meta name="description" content="mangu.ai">
+
+  <!-- OG / Social -->
+  <meta property="og:title" content="mangu.ai">
+  <meta property="og:description" content="mangu.ai">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mangu.ai">
+  <meta property="og:image" content="/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="mangu.ai">
+  <meta name="twitter:image" content="/og.png">
+
+  <!-- Favicon (inline SVG — gold dot) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23cdaf6e'/></svg>">
+
+  <!-- Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
-  <script type="module" crossorigin src="/assets/index-DWiiFcrX.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-BIlylpZS.css">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap" as="style">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <script type="module" crossorigin src="/assets/index-CZKGNNog.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-CKrW9uUg.css">
 </head>
 <body>
-
-  <header class="site-header">
-    <span class="site-wordmark">MANGÚ.AI</span>
-    <span class="site-status">
-      <span class="pulse-dot"></span>
-      SEÑAL ACTIVA
-    </span>
-  </header>
-
-  <!-- ── Hero ──────────────────────────────────────────────────────── -->
-  <section class="hero" id="hero">
-    <div class="hero-blob" aria-hidden="true"></div>
-    <div class="hero-inner">
-      <p class="hero-kicker">19.4517° N &nbsp;·&nbsp; 70.6970° W</p>
-      <h1 class="hero-title">man<em>gú</em></h1>
-      <div class="hero-rule" aria-hidden="true"></div>
-      <p class="hero-tagline">boiled.&nbsp;&nbsp;mashed.&nbsp;&nbsp;deployed.</p>
-    </div>
-    <div class="hero-scroll" aria-hidden="true">
-      <span class="scroll-line"></span>
-    </div>
-  </section>
-
-  <!-- ── Statement ─────────────────────────────────────────────────── -->
-  <section class="statement" id="statement">
-    <p class="statement-text">algo se está<br><em>cocinando</em></p>
-  </section>
-
-  <!-- ── Footer ────────────────────────────────────────────────────── -->
-  <footer class="site-footer">
-    <span>© 2026 mangu.ai</span>
-    <a href="mailto:hello@mangu.ai" class="footer-email">hello@mangu.ai</a>
-    <span class="footer-coords">19° N &nbsp;·&nbsp; 70° W</span>
-  </footer>
-
+  <canvas id="flow"></canvas>
+  <div id="glow"></div>
+  <a href="/screener/" class="corner-link">SCREENER</a>
 </body>
 </html>

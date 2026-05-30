@@ -50,3 +50,27 @@ body::before {
   html, body { cursor: auto; }
   #glow { display: none !important; }
 }
+
+/* ── Corner link ──────────────────────────────── */
+.corner-link {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.5rem;
+  z-index: 2;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-weight: 500;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  color: rgba(205, 175, 110, 0.55);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.corner-link:hover {
+  color: rgba(205, 175, 110, 1);
+}
+
+@media (hover: none) {
+  .corner-link { color: rgba(205, 175, 110, 0.8); }
+}

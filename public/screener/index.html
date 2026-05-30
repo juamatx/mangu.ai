@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Screener · mangu.ai</title>
+  <meta name="description" content="Regime screener — price regimes, technicals, and AI analysis." />
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23cdaf6e'/></svg>" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Plotly (charts) -->
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+
+  <style>
+    :root {
+      --bg: #FAF9F6;
+      --bg-card: #FFFFFF;
+      --bg-card-hover: #F5F0EB;
+      --text: #2D2A26;
+      --text-muted: #8C8579;
+      --text-faint: #B0A99F;
+      --border: #E8E2DA;
+      --uptrend: #16a34a;
+      --downtrend: #dc2626;
+      --sideways: #d97706;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: 1400px; margin: 0 auto; padding: 1.5rem; }
+    @media (min-width: 768px) { .wrap { padding: 3rem; } }
+
+    /* font weights / sizes used as utility shorthands */
+    .black { font-weight: 800; }
+    .bold { font-weight: 700; }
+    .muted { color: var(--text-muted); }
+    .faint { color: var(--text-faint); }
+    .up { color: var(--uptrend); }
+    .down { color: var(--downtrend); }
+    .side { color: var(--sideways); }
+    .upper { text-transform: uppercase; letter-spacing: .04em; }
+
+    .card { background: var(--bg-card); border: 1px solid var(--border); }
+    .card4 { background: var(--bg-card); border: 4px solid var(--border); }
+
+    .crumbs { display: flex; align-items: center; gap: .5rem; margin-bottom: 1.5rem; }
+    .crumbs a, .crumbs span { font-size: .85rem; font-weight: 800; }
+    .crumbs .sep { color: var(--text-faint); }
+    .crumbs .link { color: var(--text-muted); cursor: pointer; transition: color .15s; }
+    .crumbs .link:hover { color: var(--text); }
+    .crumbs .here { font-size: 1.4rem; letter-spacing: -.02em; }
+
+    /* watchlist grid */
+    .grid { display: grid; gap: 1rem; }
+    .grid-cards { grid-template-columns: 1fr; }
+    @media (min-width: 640px) { .grid-cards { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { .grid-cards { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 1280px) { .grid-cards { grid-template-columns: repeat(4, 1fr); } }
+
+    .tcard { padding: 1rem; transition: transform .15s ease-out, border-color .15s ease-out; cursor: pointer; }
+    .tcard:hover { transform: translateY(-4px); border-color: #78716c; }
+    .tcard .row { display: flex; align-items: center; justify-content: space-between; margin-bottom: .5rem; }
+    .tcard .tk { font-size: 1.1rem; font-weight: 800; letter-spacing: -.01em; }
+    .tcard .px { font-size: .85rem; font-weight: 800; color: var(--text-muted); }
+    .tag { font-size: .62rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; padding: .1rem .4rem; }
+
+    .regime-tag { font-size: .62rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+
+    /* section group header */
+    .group-h { display: flex; align-items: center; gap: .75rem; margin-bottom: 1rem; }
+    .group-h .dot { width: 12px; height: 12px; }
+    .group-h h2 { font-size: 1.1rem; font-weight: 800; letter-spacing: -.01em; }
+    .group-h .cnt { color: var(--text-muted); font-size: .85rem; font-weight: 800; }
+
+    .section { margin-bottom: 2.5rem; }
+
+    /* tech tiles */
+    .tiles { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+    @media (min-width: 640px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { .tiles { grid-template-columns: repeat(4, 1fr); } }
+    .tile { padding: 1rem; }
+    .tile .lbl { font-size: .62rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 800; }
+
+    .detail-grid { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
+    @media (min-width: 1024px) { .detail-grid { grid-template-columns: 1fr 280px; } }
+
+    .ai-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+    @media (min-width: 1024px) { .ai-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .pill { font-size: .62rem; font-weight: 800; padding: .12rem .5rem; text-transform: uppercase; }
+    .pill-green { background: rgba(21,128,61,.8); color: #fff; }
+    .pill-red { background: rgba(185,28,28,.8); color: #fff; }
+    .pill-neutral { background: var(--text-faint); color: #fff; }
+
+    .btn { font-size: .85rem; font-weight: 800; padding: .5rem 1.5rem; cursor: pointer; transition: background .15s; border: none; }
+    .btn-back { background: #fff; color: var(--text-muted); border: 1px solid var(--border); }
+    .btn-back:hover { border-color: #D4CEC6; color: var(--text); }
+
+    .hidden { display: none !important; }
+
+    @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeSlideUp .4s ease-out both; }
+
+    .chart-box { width: 100%; overflow: hidden; border: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- crumbs -->
+    <div class="crumbs">
+      <a class="link" href="/">HOME</a>
+      <span class="sep black">&gt;</span>
+      <span class="link" id="crumb-screener" onclick="showList()">SCREENER</span>
+      <span class="sep black hidden" id="crumb-sep2">&gt;</span>
+      <span class="here black hidden" id="crumb-ticker"></span>
+      <span class="here black" id="crumb-title">WATCHLIST</span>
+    </div>
+
+    <!-- list view -->
+    <div id="list-view"></div>
+
+    <!-- detail view -->
+    <div id="detail-view" class="hidden"></div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
