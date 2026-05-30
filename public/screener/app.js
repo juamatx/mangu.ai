@@ -38,10 +38,18 @@ async function boot() {
       '<div class="card4" style="padding:1rem"><div class="down black">Failed to load data.json</div></div>';
     return;
   }
-  // deep-link support: #TICKER
+  // build the watchlist markup once so it's ready when we return to it
+  renderList();
+
+  // route from the current URL and seed the initial history state
   const hash = decodeURIComponent(location.hash.replace(/^#/, "")).toUpperCase();
-  if (hash && WATCHLIST.tickers[hash]) showDetail(hash);
-  else renderList();
+  if (hash && WATCHLIST.tickers[hash]) {
+    history.replaceState({ view: "detail", ticker: hash, fromList: false }, "", "#" + hash);
+    renderDetailView(hash);
+  } else {
+    history.replaceState({ view: "list" }, "", location.pathname);
+    renderListView();
+  }
 }
 
 // ---- list view -------------------------------------------------------------
@@ -127,18 +135,18 @@ function cardHTML(ticker, entry, i) {
 }
 
 // ---- navigation ------------------------------------------------------------
-function showList() {
+// Pure view renderers (no history side effects) -----------------------------
+function renderListView() {
   document.getElementById("detail-view").classList.add("hidden");
   document.getElementById("list-view").classList.remove("hidden");
   document.getElementById("crumb-sep2").classList.add("hidden");
   document.getElementById("crumb-ticker").classList.add("hidden");
   document.getElementById("crumb-title").classList.remove("hidden");
   document.getElementById("crumb-screener").classList.remove("here");
-  history.replaceState(null, "", location.pathname);
   window.scrollTo(0, 0);
 }
 
-function showDetail(ticker) {
+function renderDetailView(ticker) {
   const entry = WATCHLIST.tickers[ticker];
   if (!entry || !entry.data) return;
   document.getElementById("list-view").classList.add("hidden");
@@ -148,10 +156,40 @@ function showDetail(ticker) {
   const tk = document.getElementById("crumb-ticker");
   tk.textContent = ticker;
   tk.classList.remove("hidden");
-  history.replaceState(null, "", "#" + ticker);
   window.scrollTo(0, 0);
   renderDetail(ticker, entry.data);
 }
+
+// Public actions (manage history, then render) ------------------------------
+function showDetail(ticker) {
+  const entry = WATCHLIST.tickers[ticker];
+  if (!entry || !entry.data) return;
+  // push a new history entry so device/browser back returns to the list
+  history.pushState({ view: "detail", ticker, fromList: true }, "", "#" + ticker);
+  renderDetailView(ticker);
+}
+
+function showList() {
+  // if we arrived at detail by opening a card, mirror the device back button
+  // so in-app BACK and the OS back gesture behave identically
+  if (history.state && history.state.fromList) {
+    history.back();
+  } else {
+    // deep-linked straight to a ticker: no list entry behind us, so add one
+    history.pushState({ view: "list" }, "", location.pathname);
+    renderListView();
+  }
+}
+
+// route on browser/OS back & forward
+window.addEventListener("popstate", (e) => {
+  const state = e.state;
+  if (state && state.view === "detail" && WATCHLIST.tickers[state.ticker]) {
+    renderDetailView(state.ticker);
+  } else {
+    renderListView();
+  }
+});
 
 window.showList = showList;
 window.showDetail = showDetail;
