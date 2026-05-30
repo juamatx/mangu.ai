@@ -172,7 +172,7 @@ function renderDetail(ticker, data) {
     <div style="margin-bottom:.5rem">
       <div style="display:flex;align-items:baseline;gap:.75rem;margin-bottom:.75rem">
         <h2 style="font-size:3rem;font-weight:800;letter-spacing:-.04em">${esc(ticker)}</h2>
-        ${price != null ? `<span style="font-size:1.8rem;font-weight:800;color:var(--text-muted)">$${fmt(price)}</span>` : ""}
+        ${price != null ? `<span class="countup" data-countup="${price}" data-decimals="2" data-prefix="$" style="font-size:1.8rem;font-weight:800;color:var(--text-muted)">$0.00</span>` : ""}
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between">
         <button class="btn btn-back" onclick="showList()">← BACK</button>
@@ -202,6 +202,65 @@ function renderDetail(ticker, data) {
 
   // draw chart after DOM is in place
   drawChart(data.prices || [], data.classified_regimes || []);
+
+  // fire entrance animations (count-up numbers + sliding levers + fades)
+  runEntranceAnimations();
+}
+
+// ---- entrance animations ---------------------------------------------------
+const prefersReducedMotion = () =>
+  window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function animateCountUp(elNode, target, decimals, prefix, duration = 500) {
+  const start = performance.now();
+  const ease = (t) => 1 - Math.pow(1 - t, 3); // ease-out cubic
+  function tick(now) {
+    const p = Math.min(1, (now - start) / duration);
+    const val = ease(p) * target;
+    elNode.textContent = prefix + val.toFixed(decimals);
+    if (p < 1) requestAnimationFrame(tick);
+    else elNode.textContent = prefix + Number(target).toFixed(decimals);
+  }
+  requestAnimationFrame(tick);
+}
+
+function runEntranceAnimations() {
+  const root = document.getElementById("detail-view");
+  if (!root) return;
+  const reduced = prefersReducedMotion();
+
+  // 1. Count-up numbers (with scale pop)
+  root.querySelectorAll(".countup").forEach((node) => {
+    const target = parseFloat(node.getAttribute("data-countup"));
+    const decimals = parseInt(node.getAttribute("data-decimals") || "0", 10);
+    const prefix = node.getAttribute("data-prefix") || "";
+    if (isNaN(target)) return;
+    if (reduced) {
+      node.textContent = prefix + target.toFixed(decimals);
+      return;
+    }
+    node.style.display = "inline-block";
+    node.style.animation = "numberPop 0.5s ease-out";
+    animateCountUp(node, target, decimals, prefix);
+  });
+
+  // 2. Sliding levers (RSI + S/R dots glide from center to real value)
+  //    + S/R label/percent fades. rAF defers the style write one frame past
+  //    injection so the CSS transition has a "from" state to animate from.
+  const dots = root.querySelectorAll(".tech-dot-animate");
+  const fades = root.querySelectorAll(".tech-fade");
+  const settle = () => {
+    dots.forEach((dot) => {
+      const to = dot.getAttribute("data-slide-left");
+      if (to) dot.style.left = to;
+    });
+    fades.forEach((f) => f.classList.add("alive"));
+  };
+  if (reduced) {
+    settle();
+  } else {
+    requestAnimationFrame(() => requestAnimationFrame(settle));
+  }
 }
 
 // ---- technicals block ------------------------------------------------------
@@ -249,7 +308,7 @@ function maTileHTML(label, value, above, pct, price) {
           <span style="font-size:.55rem;color:var(--text-faint);font-weight:800;line-height:1;margin-top:.1rem">MA</span>
           <span style="font-size:.55rem;color:var(--text-muted);font-weight:800;line-height:1">$${fmt(value)}</span>
         </div>
-        <div style="position:absolute;top:0;display:flex;flex-direction:column;align-items:center;left:${youPct}%;transform:translateX(-50%)">
+        <div class="tech-dot-animate" data-slide-left="${youPct}%" style="position:absolute;top:0;display:flex;flex-direction:column;align-items:center;left:50%;transform:translateX(-50%)">
           <span style="font-size:.55rem;font-weight:800;line-height:1;color:${color}">$${fmt(price)}</span>
           <span style="font-size:.5rem;font-weight:800;line-height:1;margin-top:.1rem;color:${color}">Current</span>
           <div style="width:.75rem;height:.75rem;margin-top:.1rem;border:2px solid #fff;box-shadow:0 1px 2px rgba(0,0,0,.2);background:${bg}"></div>
@@ -273,13 +332,13 @@ function rsiTileHTML(rsi, rsiPct, t) {
     <div class="tile card">
       <div style="margin-bottom:.75rem"><span class="lbl">RSI (14-day)</span></div>
       <div style="display:flex;align-items:baseline;gap:.5rem;margin-bottom:.5rem">
-        <span class="black" style="font-size:1.5rem">${Math.round(rsi)}</span>${trend}
+        <span class="black countup" data-countup="${rsi}" data-decimals="0" style="font-size:1.5rem">0</span>${trend}
       </div>
       <div style="position:relative;height:.6rem;background:var(--border);overflow:hidden">
         <div style="position:absolute;inset:0 auto 0 0;background:rgba(34,197,94,.3);width:30%"></div>
         <div style="position:absolute;inset:0;left:30%;background:rgba(100,116,139,.3);width:40%"></div>
         <div style="position:absolute;inset:0 0 0 auto;background:rgba(239,68,68,.3);width:30%"></div>
-        <div style="position:absolute;top:50%;transform:translateY(-50%);width:.75rem;height:.75rem;background:#fff;border:2px solid #000;box-shadow:0 1px 2px rgba(0,0,0,.2);left:calc(${rsiPct}% - 6px)"></div>
+        <div class="tech-dot-animate" data-slide-left="calc(${rsiPct}% - 6px)" style="position:absolute;top:50%;transform:translateY(-50%);width:.75rem;height:.75rem;background:#fff;border:2px solid #000;box-shadow:0 1px 2px rgba(0,0,0,.2);left:calc(50% - 6px)"></div>
       </div>
       <div style="display:flex;justify-content:space-between;font-size:.55rem;color:var(--text-muted);margin-top:.25rem;font-weight:800;text-transform:uppercase">
         <span class="up">Oversold</span><span class="faint">Neutral</span><span class="down">Overbought</span>
@@ -307,12 +366,12 @@ function srTileHTML(t, price) {
         </div>
         <div style="position:absolute;top:50%;transform:translateY(-50%);left:0;width:2px;height:1rem;background:#22c55e"></div>
         <div style="position:absolute;top:50%;transform:translateY(-50%);right:0;width:2px;height:1rem;background:#ef4444"></div>
-        <div style="position:absolute;top:50%;left:${pricePct}%;transform:translate(-50%,-50%)">
+        <div class="tech-dot-animate" data-slide-left="${pricePct}%" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)">
           <div style="width:.75rem;height:.75rem;background:var(--text);border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,.3)"></div>
         </div>
       </div>
-      <div style="text-align:center;margin-bottom:.5rem"><span class="black" style="font-size:.55rem">Current: $${fmt(price)}</span></div>
-      <div style="display:flex;justify-content:space-between;font-size:.55rem;color:var(--text-muted);font-weight:800">
+      <div class="tech-fade" style="text-align:center;margin-bottom:.5rem"><span class="black" style="font-size:.55rem">Current: $${fmt(price)}</span></div>
+      <div class="tech-fade" style="display:flex;justify-content:space-between;font-size:.55rem;color:var(--text-muted);font-weight:800">
         <span>${fmt(Math.abs(t.pct_to_support ?? 0), 1)}% to support</span>
         <span>${fmt(Math.abs(t.pct_to_resistance ?? 0), 1)}% to resistance</span>
       </div>

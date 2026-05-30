@@ -112,6 +112,24 @@
     .fade-in { animation: fadeSlideUp .4s ease-out both; }
 
     .chart-box { width: 100%; overflow: hidden; border: 1px solid var(--border); }
+
+    /* ── Entrance animations (detail view) ──────────── */
+    /* numberPop: quick scale pop on count-up numbers */
+    @keyframes numberPop {
+      0%   { transform: scale(0.8); }
+      60%  { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+    /* tech-dot-animate: levers glide horizontally from center to real value */
+    .tech-dot-animate { transition: left 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+    /* tech-fade: S/R current + percent labels fade in after a short delay */
+    .tech-fade { opacity: 0; transition: opacity 0.5s ease 0.5s; }
+    .tech-fade.alive { opacity: 1; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .tech-dot-animate { transition: none; }
+      .tech-fade { transition: none; }
+    }
   </style>
 </head>
 <body>
